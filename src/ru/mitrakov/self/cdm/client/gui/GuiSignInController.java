@@ -1,0 +1,61 @@
+package ru.mitrakov.self.cdm.client.gui;
+
+import de.lessvoid.nifty.Nifty;
+import de.lessvoid.nifty.NiftyEventSubscriber;
+import de.lessvoid.nifty.controls.ButtonClickedEvent;
+import de.lessvoid.nifty.controls.TextFieldChangedEvent;
+import de.lessvoid.nifty.screen.Screen;
+import de.lessvoid.nifty.screen.ScreenController;
+import ru.mitrakov.self.cdm.client.engine.Engine;
+import ru.mitrakov.self.cdm.client.json.commands.cmd.Login;
+import ru.mitrakov.self.cdm.client.networking.INetwork;
+
+/**
+ *
+ * @author Tommy
+ */
+public final class GuiSignInController implements ScreenController {
+    private final IGui gui;
+    private final Engine engine;
+    private final INetwork network;
+    
+    private String login = "";
+    private String password = "";
+
+    public GuiSignInController(IGui gui, INetwork network, Engine engine) {
+        assert gui != null && network != null && engine != null;
+        this.gui = gui;
+        this.engine = engine;
+        this.network = network;
+    }
+    
+    @Override
+    public void bind(Nifty nifty, Screen screen) {}
+
+    @Override
+    public void onStartScreen() {}
+
+    @Override
+    public void onEndScreen() {}
+    
+    @NiftyEventSubscriber(id = "txt_login")
+    public void onLoginChanged(String id, TextFieldChangedEvent event) {
+        login = event.getText();
+    }
+    
+    @NiftyEventSubscriber(id = "txt_pass")
+    public void onPasswordChanged(String id, TextFieldChangedEvent event) {
+        password = event.getText();
+    }
+    
+    @NiftyEventSubscriber(id = "ok")
+    public void onOkClick(String id, ButtonClickedEvent event) {
+        engine.saveLoginPassword(login, password);
+        network.send(new Login(login, password));
+    }
+    
+    @NiftyEventSubscriber(id = "cancel")
+    public void onCancelClick(String id, ButtonClickedEvent event) {
+        gui.gotoScreen("landing");
+    }
+}
