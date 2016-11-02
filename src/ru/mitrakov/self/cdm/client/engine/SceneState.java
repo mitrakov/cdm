@@ -28,7 +28,7 @@ public class SceneState extends AbstractAppState {
     protected Engine engine;
     
     private transient Geometry curCell;
-    private transient Spatial curUnit;
+    private transient Spatial curUnit, activeUnit;
     private transient Vector3f desiredCamPos;
     private transient final Quaternion desiredCamDir = new Quaternion();
     
@@ -107,14 +107,23 @@ public class SceneState extends AbstractAppState {
                 }
                 break;
             }
-            default:
+            case MyTurnReadyToFire: {
                 cleanupUnit();
                 cleanupCell();
+                if (activeUnit != null) {
+                    Camera camera = engine.getCamera(); assert camera != null;
+                    activeUnit.setLocalRotation(camera.getRotation());
+                }
+            }
+            default: {
+                cleanupUnit();
+                cleanupCell();
+            }
         }
         
         //updating camera location
         if (desiredCamPos != null) {
-            Camera camera = engine.getCamera();
+            Camera camera = engine.getCamera(); assert camera != null;
             Vector3f camPos = camera.getLocation();
             if (camPos.distance(desiredCamPos) < 0.1) { // if camPos == desiredCamPos
                 desiredCamPos = null;
@@ -130,11 +139,6 @@ public class SceneState extends AbstractAppState {
 
     @Override
     public void cleanup() {
-        System.out.println("Clean up!!!");
-//        for (Spatial s : node.getChildren())
-//            s.removeFromParent();
-//        node.detachAllChildren();
-//        node.removeFromParent();
         engine.getRootNode().detachChild(node);
         super.cleanup();
     }
@@ -318,6 +322,7 @@ public class SceneState extends AbstractAppState {
     private void cleanupUnit() {
         if (curUnit != null) {
             curUnit.setLocalScale(UNIT_SCALE);
+            activeUnit = curUnit;
             curUnit = null;
         }
     }
