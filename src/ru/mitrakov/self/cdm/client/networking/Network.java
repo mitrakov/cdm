@@ -11,7 +11,6 @@ import ru.mitrakov.self.cdm.client.handlers.Handler;
 import ru.mitrakov.self.cdm.client.json.Parser;
 import ru.mitrakov.self.cdm.client.json.commands.Cmd;
 import ru.mitrakov.self.cdm.client.json.commands.CmdSid;
-import ru.mitrakov.self.cdm.client.json.commands.cmd.Login;
 
 /**
  *

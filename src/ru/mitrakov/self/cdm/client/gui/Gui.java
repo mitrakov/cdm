@@ -5,6 +5,8 @@ import de.lessvoid.nifty.controls.ListBox;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
 import java.util.Collection;
+import javax.swing.JOptionPane;
+import ru.mitrakov.self.cdm.client.Model;
 import ru.mitrakov.self.cdm.client.engine.Engine;
 import ru.mitrakov.self.cdm.client.game.IStorage;
 import ru.mitrakov.self.cdm.client.game.Weapon;
@@ -25,12 +27,17 @@ public final class Gui implements IGui {
 
     @Override
     public void showInvite(int sid) {
-        engine.hold();
-        storage.setEnemySid(sid);
-        // @mitrakov: don't use findNiftyControl("invite_txt", Label.class); it somehow returns null
-        Element txt = engine.getNifty().getScreen("invite").findElementByName("invite_txt"); assert txt != null;
-        txt.getRenderer(TextRenderer.class).setText(String.format("Игрок %d желает сразиться с Вами\nПринять?", sid));        
-        engine.getNifty().gotoScreen("invite");
+        String s = String.format("Игрок %d желает сразиться с Вами\nПринять?", sid);
+        if (engine.getContext().isCreated()) {
+            engine.hold();
+            storage.setEnemySid(sid);
+            // @mitrakov: don't use findNiftyControl("invite_txt", Label.class); it somehow returns null
+            Element txt = engine.getNifty().getScreen("invite").findElementByName("invite_txt"); assert txt != null;
+            txt.getRenderer(TextRenderer.class).setText(s);        
+            engine.getNifty().gotoScreen("invite");
+        } else if (JOptionPane.showConfirmDialog(null, s, "Coup de Main", JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
+            Model.needRestart = true;
+        }
     }
     
     @Override

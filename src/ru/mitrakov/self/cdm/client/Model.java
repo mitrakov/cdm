@@ -10,6 +10,9 @@ import java.util.logging.Logger;
 import com.jme3.system.AppSettings;
 import java.util.prefs.BackingStoreException;
 import de.lessvoid.nifty.screen.ScreenController;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
 
 
 /**
@@ -19,10 +22,17 @@ import de.lessvoid.nifty.screen.ScreenController;
 public final class Model {
     public static IStorage mStorage;   // see note #1
     public static INetwork mNetwork;   // see note #1
+    public static boolean needRestart = true;
     
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ClassLoader.getSystemClassLoader().setDefaultAssertionStatus(true); // turn asserts on
-        new Model().start();
+        registerInstance();
+        while (true) {
+            if (needRestart) {
+                needRestart = false;
+                new Model().start();
+            } else Thread.sleep(100);
+        }
     }
     
     private void start() {
@@ -80,4 +90,20 @@ public final class Model {
         engine.setInputController(inputController);
         engine.start();
     }
+    
+    private static void registerInstance() {
+        Thread th = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    new ServerSocket(37686, 10, InetAddress.getByAddress(new byte[] {127,0,0,1})).accept();
+                } catch (IOException ignored) {
+                    System.err.println("Another instance is already running");
+                    System.exit(0);
+                }
+            }
+        });
+        th.setDaemon(true);
+        th.start();
+    } 
 }

@@ -37,6 +37,7 @@ public class Engine extends SimpleApplication {
     @Override
     public void simpleInitApp() {
         // creating Nifty Gui
+        // @mitrakov: "new NiftyJmeDisplay" may produce EventServiceExistsException due to a bug in Nifty GUI. see https://hub.jmonkeyengine.org/t/nifty-and-appstates/25066
         NiftyJmeDisplay niftyDisplay = new NiftyJmeDisplay(assetManager, inputManager, audioRenderer, guiViewPort);
         nifty = niftyDisplay.getNifty();
         nifty.fromXml("Interface/gui/interface.xml", "empty", controllers);
