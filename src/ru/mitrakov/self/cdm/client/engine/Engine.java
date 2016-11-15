@@ -85,12 +85,14 @@ public class Engine extends SimpleApplication {
     
     public void hold() {
         trixCam.disable();
-        inputManager.setCursorVisible(true);
+        if (inputManager != null)                       // sometimes inputManager == NULL (I don't know exactly why)
+            inputManager.setCursorVisible(true);
     }
     
     public void resume() {
         trixCam.enable();
-        inputManager.setCursorVisible(false);
+        if (inputManager != null)                       // sometimes inputManager == NULL (I don't know exactly why)
+            inputManager.setCursorVisible(false);
     }
     
     public void setScreenControllers(ScreenController ... controllers) {

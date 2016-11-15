@@ -11,8 +11,7 @@ import com.jme3.system.AppSettings;
 import java.util.prefs.BackingStoreException;
 import de.lessvoid.nifty.screen.ScreenController;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
+import java.net.*;
 
 
 /**
@@ -24,13 +23,22 @@ public final class Model {
     public static INetwork mNetwork;   // see note #1
     public static boolean needRestart = true;
     
+    private static Engine engine;
+    
     public static void main(String[] args) throws InterruptedException {
-        ClassLoader.getSystemClassLoader().setDefaultAssertionStatus(true); // turn asserts on
+        // turn asserts on
+        ClassLoader.getSystemClassLoader().setDefaultAssertionStatus(true);
+        // convert the app into a singleton process
         registerInstance();
+        // check whether the app should run in background
+        if (args.length == 1 && args[0].equals("background"))
+            needRestart = false;
+        // infinite loop to make the app restartable
         while (true) {
             if (needRestart) {
                 needRestart = false;
-                new Model().start();
+                if (engine == null || !engine.getContext().isCreated())
+                    new Model().start();
             } else Thread.sleep(100);
         }
     }
@@ -41,7 +49,7 @@ public final class Model {
         INetwork network = new Network();
         
         // creating jMonkey Engine
-        Engine engine = new Engine(network);
+        engine = new Engine(network);
         engine.setPauseOnLostFocus(false);
         engine.setShowSettings(false);  // bug in jMonkey Engine! if "ShowSettings" is set to true, it inexplicably loads incorrect settings
         
@@ -92,14 +100,35 @@ public final class Model {
     }
     
     private static void registerInstance() {
+        // creating new thread because accept() is a blocking operation
         Thread th = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    new ServerSocket(37686, 10, InetAddress.getByAddress(new byte[] {127,0,0,1})).accept();
+                    // start listening on a loopback socket (if no exceptions thrown,
+                    // then we run a first instance of the app
+                    ServerSocket serverSocket = new ServerSocket(37686, 10, InetAddress.getByAddress(new byte[] {127,0,0,1}));
+                    while (true) {
+                        try (Socket sock = serverSocket.accept()) {
+                            // this code would run only if the user is attempting
+                            // to start another instance of the app;
+                            // it usually means that the user wants
+                            // to switch the app from background to normal mode;
+                            // so we just restart itself (whilst the other instance
+                            // will be closed automatically)
+                            if (sock.getInetAddress().isLoopbackAddress())
+                                needRestart = true;
+                        }
+                    }
                 } catch (IOException ignored) {
-                    System.err.println("Another instance is already running");
-                    System.exit(0);
+                    // failed to seize socket! It means that the user is attempting
+                    // to start another instance; so we notify the first instance
+                    // about this (causing it to restart) and shutdown
+                    try {
+                        System.err.println("Another instance is already running");
+                        new Socket("127.0.0.1", 37686).close();
+                        System.exit(0);
+                    } catch (Exception ignore) {}
                 }
             }
         });
