@@ -2,9 +2,6 @@ package ru.mitrakov.self.cdm.client.handlers;
 
 import ru.mitrakov.self.cdm.client.json.commands.cmd.*;
 import ru.mitrakov.self.cdm.client.json.commands.Cmd;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import ru.mitrakov.self.cdm.client.game.IStorage;
 import ru.mitrakov.self.cdm.client.gui.IGui;
 import ru.mitrakov.self.cdm.client.networking.INetwork;
@@ -28,12 +25,12 @@ public final class UserHandler extends Handler {
     }
 
     @Override
-    public void handle(Cmd cmd) throws IOException {
+    public void handle(Cmd cmd) {
         if (cmd instanceof ResponseUserId)
             network.send(new Invite(network.getSid(), storage.getToken(), ((ResponseUserId)cmd).userId));
         else if (cmd instanceof Invite) {
             // TODO: check if now playing
-            gui.showInvite(((Invite)cmd).userId);
+            gui.showInvite((Invite)cmd);
         } else if (cmd instanceof ResponseToken) {
             storage.setToken(((ResponseToken)cmd).token);
             network.send(new GetUnits(((ResponseToken)cmd).sid, ((ResponseToken)cmd).token));

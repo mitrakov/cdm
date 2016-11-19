@@ -10,7 +10,7 @@ import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.input.NiftyInputEvent;
 import de.lessvoid.xml.xpp3.Attributes;
 import java.util.Properties;
-import ru.mitrakov.self.cdm.client.Model;
+import ru.mitrakov.self.cdm.client.Starter;
 import ru.mitrakov.self.cdm.client.game.IStorage;
 import ru.mitrakov.self.cdm.client.json.commands.cmd.GetUserId;
 import ru.mitrakov.self.cdm.client.networking.INetwork;
@@ -27,7 +27,7 @@ public final class GuiFindController implements Controller {
     private String nameToFind = "";
     
     public GuiFindController(){
-        this(Model.mStorage, Model.mNetwork);
+        this(Starter.model.getStorage(), Starter.model.getNetwork());
     }
 
     public GuiFindController(IStorage storage, INetwork network) {

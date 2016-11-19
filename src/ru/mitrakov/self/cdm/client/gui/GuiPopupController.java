@@ -9,7 +9,7 @@ import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.input.NiftyInputEvent;
 import de.lessvoid.xml.xpp3.Attributes;
 import java.util.Properties;
-import ru.mitrakov.self.cdm.client.Model;
+import ru.mitrakov.self.cdm.client.Starter;
 import ru.mitrakov.self.cdm.client.game.IStorage;
 import ru.mitrakov.self.cdm.client.networking.INetwork;
 
@@ -24,7 +24,7 @@ public class GuiPopupController implements Controller {
     protected String curPopupId = "";
 
     public GuiPopupController() {
-        this(Model.mStorage, Model.mNetwork);
+        this(Starter.model.getStorage(), Starter.model.getNetwork());
     }
 
     public GuiPopupController(IStorage storage, INetwork network) {

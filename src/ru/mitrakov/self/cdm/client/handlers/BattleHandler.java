@@ -3,7 +3,6 @@ package ru.mitrakov.self.cdm.client.handlers;
 import ru.mitrakov.self.cdm.client.json.commands.Cmd;
 import ru.mitrakov.self.cdm.client.json.commands.cmd.ResponseState;
 import ru.mitrakov.self.cdm.client.json.commands.cmd.ResponseAction;
-import java.io.IOException;
 import java.util.*;
 import ru.mitrakov.self.cdm.client.Utils;
 import ru.mitrakov.self.cdm.client.game.Cell;
@@ -30,13 +29,13 @@ public final class BattleHandler extends Handler {
     }
 
     @Override
-    public void handle(Cmd cmd) throws IOException {
+    public void handle(Cmd cmd) {
         if (cmd instanceof ResponseState)
             handleNewState(((ResponseState)cmd).state);
         else if (cmd instanceof ResponseAction)
             handleNewState(((ResponseAction)cmd).state);
         else if (cmd instanceof Reject)
-            gui.showReject(((Reject)cmd).enemySid);
+            gui.showReject((Reject)cmd);
         else if (cmd instanceof ResponseFinished) {
             battleManager.destroyBattle();
             gui.showVictory(((ResponseFinished)cmd).winnerName);

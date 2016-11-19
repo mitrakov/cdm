@@ -20,7 +20,7 @@ public class FirstHandler extends Handler {
     }
 
     @Override
-    public void handle(Cmd cmd) throws IOException {
+    public void handle(Cmd cmd) {
         if (cmd instanceof ResponseOk)
             System.out.println("Server responded OK");
         else if (cmd instanceof ResponseError)

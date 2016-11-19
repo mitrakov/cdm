@@ -10,6 +10,8 @@ import ru.mitrakov.self.cdm.client.json.commands.Cmd;
 public interface INetwork {
     public void send(Cmd cmd);
     public void start();
+    public int  getSid();
     public void setHandler(Handler handler);
-    public int getSid();
+    public Handler getHandler();
+    
 }

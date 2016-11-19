@@ -10,8 +10,6 @@ import java.util.logging.Logger;
 import com.jme3.system.AppSettings;
 import java.util.prefs.BackingStoreException;
 import de.lessvoid.nifty.screen.ScreenController;
-import java.io.IOException;
-import java.net.*;
 
 
 /**
@@ -19,34 +17,14 @@ import java.net.*;
  * @author Tommy
  */
 public final class Model {
-    public static IStorage mStorage;   // see note #1
-    public static INetwork mNetwork;   // see note #1
-    public static boolean needRestart = true;
+    private IStorage storage;   // see note #1
+    private INetwork network;   // see note #1
+    Engine engine;
     
-    private static Engine engine;
-    
-    public static void main(String[] args) throws InterruptedException {
-        // turn asserts on
-        ClassLoader.getSystemClassLoader().setDefaultAssertionStatus(true);
-        // convert the app into a singleton process
-        registerInstance();
-        // check whether the app should run in background
-        if (args.length == 1 && args[0].equals("background"))
-            needRestart = false;
-        // infinite loop to make the app restartable
-        while (true) {
-            if (needRestart) {
-                needRestart = false;
-                if (engine == null || !engine.getContext().isCreated())
-                    new Model().start();
-            } else Thread.sleep(100);
-        }
-    }
-    
-    private void start() {
+    protected Model start() {
         // creating objects
-        IStorage storage = new Storage();
-        INetwork network = new Network();
+        storage = new Storage();
+        network = new Network();
         
         // creating jMonkey Engine
         engine = new Engine(network);
@@ -80,15 +58,7 @@ public final class Model {
         ScreenController sc5 = new GuiSettingsController(gui, engine, storage);
         ScreenController sc6 = new GuiInviteController(gui, storage, network);
         ScreenController sc7 = new GuiWeaponController(gui, battleManager);
-        
-        // @mitrakov: note #1
-        // jMonkey trouble. I don't find the way to create "Popup" Controllers and 
-        // to inject 'em into the Nifty (in contrast to ScreenController, that could 
-        // be easily injected). Therefore all Controllers have default constructors
-        // and access such objects as Storage and Network through global static variables
-        mStorage = storage;
-        mNetwork = network;
-        
+            
         // set up objects
         network.setHandler(firstHandler);
         network.start();
@@ -97,42 +67,25 @@ public final class Model {
         engine.setScreenControllers(sc1, sc2, sc3, sc4, sc5, sc6, sc7);
         engine.setInputController(inputController);
         engine.start();
+        return this;
     }
     
-    private static void registerInstance() {
-        // creating new thread because accept() is a blocking operation
-        Thread th = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // start listening on a loopback socket (if no exceptions thrown,
-                    // then we run a first instance of the app
-                    ServerSocket serverSocket = new ServerSocket(37686, 10, InetAddress.getByAddress(new byte[] {127,0,0,1}));
-                    while (true) {
-                        try (Socket sock = serverSocket.accept()) {
-                            // this code would run only if the user is attempting
-                            // to start another instance of the app;
-                            // it usually means that the user wants
-                            // to switch the app from background to normal mode;
-                            // so we just restart itself (whilst the other instance
-                            // will be closed automatically)
-                            if (sock.getInetAddress().isLoopbackAddress())
-                                needRestart = true;
-                        }
-                    }
-                } catch (IOException ignored) {
-                    // failed to seize socket! It means that the user is attempting
-                    // to start another instance; so we notify the first instance
-                    // about this (causing it to restart) and shutdown
-                    try {
-                        System.err.println("Another instance is already running");
-                        new Socket("127.0.0.1", 37686).close();
-                        System.exit(0);
-                    } catch (Exception ignore) {}
-                }
-            }
-        });
-        th.setDaemon(true);
-        th.start();
-    } 
+    
+    
+    // @mitrakov: note #1
+    // jMonkey trouble. I don't find the way to create "Popup" Controllers and 
+    // to inject 'em into the Nifty (in contrast to ScreenController, that could 
+    // be easily injected). Therefore all Controllers have default constructors
+    // and access such objects as Storage and Network through global static variables
+    
+    
+    
+    // GENERATED CODE
+    public IStorage getStorage() {
+        return storage;
+    }
+
+    public INetwork getNetwork() {
+        return network;
+    }
 }

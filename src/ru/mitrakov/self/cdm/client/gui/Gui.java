@@ -7,9 +7,13 @@ import de.lessvoid.nifty.elements.render.TextRenderer;
 import java.util.Collection;
 import javax.swing.JOptionPane;
 import ru.mitrakov.self.cdm.client.Model;
+import ru.mitrakov.self.cdm.client.Starter;
 import ru.mitrakov.self.cdm.client.engine.Engine;
 import ru.mitrakov.self.cdm.client.game.IStorage;
 import ru.mitrakov.self.cdm.client.game.Weapon;
+import ru.mitrakov.self.cdm.client.json.commands.Cmd;
+import ru.mitrakov.self.cdm.client.json.commands.cmd.Invite;
+import ru.mitrakov.self.cdm.client.json.commands.cmd.Reject;
 
 /**
  *
@@ -26,26 +30,27 @@ public final class Gui implements IGui {
     }
 
     @Override
-    public void showInvite(int sid) {
-        String s = String.format("Игрок %d желает сразиться с Вами\nПринять?", sid);
+    public void showInvite(Invite cmd) {
+        String s1 = String.format("Игрок %d желает сразиться с Вами\nПринять?", cmd.userId);
+        String s2 = String.format("Вам пришло новое приглашение от игрока %d", cmd.userId);
         if (engine.getContext().isCreated()) {
             engine.hold();
-            storage.setEnemySid(sid);
-            // @mitrakov: don't use findNiftyControl("invite_txt", Label.class); it somehow returns null
+            storage.setEnemySid(cmd.userId);
+            // @mitrakov: don't use findNiftyControl("invite_txt", Label.class); it unexpectedly returns null
             Element txt = engine.getNifty().getScreen("invite").findElementByName("invite_txt"); assert txt != null;
-            txt.getRenderer(TextRenderer.class).setText(s);        
+            txt.getRenderer(TextRenderer.class).setText(s1);
             engine.getNifty().gotoScreen("invite");
-        } else if (JOptionPane.showConfirmDialog(null, s, "Coup de Main", JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
-            Model.needRestart = true;
+        } else if (JOptionPane.showConfirmDialog(null, s2, "Coup de Main", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+            Starter.restartModel(cmd);
         }
     }
     
     @Override
-    public void showReject(int sid) {
+    public void showReject(Reject cmd) {
         engine.hold();
         Element popup = engine.getNifty().createPopup("popup_reject");
         Label label = popup.findNiftyControl("lbl_reject", Label.class); assert label != null;
-        label.setText(String.format("Игрок %d отказался играть с Вами", sid));
+        label.setText(String.format("Игрок %d отказался играть с Вами", cmd.enemySid));
         engine.getNifty().showPopup(engine.getNifty().getCurrentScreen(), popup.getId(), null);
     }
     

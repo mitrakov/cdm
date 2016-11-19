@@ -21,7 +21,7 @@ public abstract class Handler {
             parent.next = this;
     }
     
-    public void handle(Cmd cmd) throws IOException {
+    public void handle(Cmd cmd) {
         if (next != null)
             next.handle(cmd);
         else System.err.println(String.format("Cmd %s not handled", cmd));

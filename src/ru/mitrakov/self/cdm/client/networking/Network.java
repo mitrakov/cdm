@@ -76,4 +76,9 @@ public class Network implements INetwork {
     public void setHandler(Handler handler) {
         this.handler = handler;
     }
+    
+    @Override
+    public Handler getHandler() {
+        return handler;
+    }
 }
