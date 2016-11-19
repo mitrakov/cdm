@@ -4,6 +4,7 @@ import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.NiftyEventSubscriber;
 import de.lessvoid.nifty.controls.ButtonClickedEvent;
 import de.lessvoid.nifty.controls.TextFieldChangedEvent;
+import de.lessvoid.nifty.input.NiftyInputEvent;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import ru.mitrakov.self.cdm.client.engine.Engine;
@@ -46,6 +47,12 @@ public final class GuiSignInController implements ScreenController {
     @NiftyEventSubscriber(id = "txt_pass")
     public void onPasswordChanged(String id, TextFieldChangedEvent event) {
         password = event.getText();
+    }
+    
+    @NiftyEventSubscriber(pattern = "txt_.*")
+    public void onKeyPressed(String id, NiftyInputEvent event) {
+        if (event == NiftyInputEvent.SubmitText)
+            onOkClick(id, null);
     }
     
     @NiftyEventSubscriber(id = "ok")

@@ -72,7 +72,6 @@ public final class GuiMainController implements ScreenController {
                 Action action = actions.get(i); assert action != null;
                 switch (action) {
                     case InviteByName: {
-                        Nifty nifty = event.getButton().getElement().getNifty();
                         Element popup = nifty.createPopup("popup_find");
                         nifty.showPopup(nifty.getCurrentScreen(), popup.getId(), null);
                         break;
@@ -84,9 +83,8 @@ public final class GuiMainController implements ScreenController {
                         gui.gotoLandingScreen();
                         break;
                     case RenameUnit: {
-                        Nifty nifty = event.getButton().getElement().getNifty();
                         Element popup = nifty.createPopup("popup_rename_unit");
-                        TextField txt = popup.findNiftyControl("popup_rename_txt", TextField.class); assert txt != null;
+                        TextField txt = popup.findNiftyControl("popup_txt_rename", TextField.class); assert txt != null;
                         txt.setText(storage.getUnitNames().get(storage.getCurUserUnit()));
                         nifty.showPopup(nifty.getCurrentScreen(), popup.getId(), null);
                         break;

@@ -174,11 +174,11 @@
     <popup id="popup_find" childLayout="center" backgroundColor="#000a" controller="ru.mitrakov.self.cdm.client.gui.GuiFindController">
         <panel width="75%" height="40%" align="center" valign="center" childLayout="vertical" backgroundColor="#55a5" padding="10">
             <control id="lbl" name="label" width="95%" height="40px" align="center" valign="center" font="de/fonts/trix.fnt" text="Введите имя соперника" />
-            <control id="popup_find_txt" name="textfield" width="45%" height="40px" align="center" valign="center" />
+            <control id="popup_txt_find" name="textfield" width="45%" height="40px" align="center" valign="center" />
             <panel height="30px" />
             <panel width="60%" height="35px" childLayout="horizontal" align="right" visibleToMouse="true">
-                <control id="popup_find_ok"     name="button" marginRight="5" height="40px" width="50%" label="OK" />
-                <control id="popup_find_cancel" name="button" marginRight="5" height="40px" width="50%" label="Отмена" />
+                <control id="popup_find_ok" name="button" marginRight="5" height="40px" width="50%" label="OK" />
+                <control id="popup_close"   name="button" marginRight="5" height="40px" width="50%" label="Отмена" />
             </panel>
         </panel>
     </popup>
@@ -202,7 +202,7 @@
     <popup id="popup_rename_unit" childLayout="center" backgroundColor="#000a" controller="ru.mitrakov.self.cdm.client.gui.GuiRenameUnitController">
         <panel width="75%" height="40%" align="center" valign="center" childLayout="vertical" backgroundColor="#55a5" padding="10">
             <control name="label" width="95%" height="40px" align="center" valign="center" font="de/fonts/trix.fnt" text="Введите новое имя" />
-            <control id="popup_rename_txt" name="textfield" width="45%" height="40px" align="center" valign="center" />
+            <control id="popup_txt_rename" name="textfield" width="45%" height="40px" align="center" valign="center" />
             <panel height="30px" />
             <panel width="60%" height="35px" childLayout="horizontal" align="right" visibleToMouse="true">
                 <control id="popup_ok"     name="button" marginRight="5" height="40px" width="50%" label="OK" />

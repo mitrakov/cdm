@@ -72,9 +72,9 @@ public class Engine extends SimpleApplication {
         hold();
         String login = settings.getString("login");
         String password = settings.getString("password");
-        if (login != null && password != null) {
+        if (login != null && password != null)
             network.send(new Login(login, password));   // landing page will be shown by callback
-        } else nifty.gotoScreen("landing");
+        nifty.gotoScreen("landing");
     }
 
     @Override

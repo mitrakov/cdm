@@ -22,6 +22,7 @@ public class GuiPopupController implements Controller {
     protected final INetwork network;
     
     protected String curPopupId = "";
+    protected Nifty nifty;
 
     public GuiPopupController() {
         this(Starter.model.getStorage(), Starter.model.getNetwork());
@@ -35,7 +36,8 @@ public class GuiPopupController implements Controller {
     
     @Override
     public void bind(Nifty nifty, Screen screen, Element element, Properties parameter, Attributes controlDefinitionAttributes) {
-        curPopupId = element.getId();
+        this.nifty = nifty;
+        this.curPopupId = element.getId();
     }
     
     @Override
@@ -50,14 +52,24 @@ public class GuiPopupController implements Controller {
     @Override
     public boolean inputEvent(NiftyInputEvent inputEvent) {return true;}
     
+    @NiftyEventSubscriber(pattern = "popup_txt_.*")
+    public void onKeyPressed(String id, NiftyInputEvent event) {
+        if (event == NiftyInputEvent.SubmitText)
+            onOkClick(id, null);
+    }
+    
+    public void onOkClick(String id, ButtonClickedEvent event) {
+        onCloseClick(id, null); // should be overriden by subclasses
+    }
+    
     @NiftyEventSubscriber(id = "popup_close")
     public void onCloseClick(String id, ButtonClickedEvent event) {
-        event.getButton().getElement().getNifty().closePopup(curPopupId);
+        nifty.closePopup(curPopupId);
     }
     
     @NiftyEventSubscriber(id = "popup_goto_main")
     public void onGotoMainClick(String id, ButtonClickedEvent event) {
-        event.getButton().getElement().getNifty().gotoScreen("main");
+        nifty.gotoScreen("main");
         onCloseClick(id, event);
     }
 }
