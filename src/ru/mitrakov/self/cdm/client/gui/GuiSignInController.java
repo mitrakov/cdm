@@ -1,12 +1,9 @@
 package ru.mitrakov.self.cdm.client.gui;
 
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.NiftyEventSubscriber;
-import de.lessvoid.nifty.controls.ButtonClickedEvent;
-import de.lessvoid.nifty.controls.TextFieldChangedEvent;
+import de.lessvoid.nifty.*;
+import de.lessvoid.nifty.screen.*;
+import de.lessvoid.nifty.controls.*;
 import de.lessvoid.nifty.input.NiftyInputEvent;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
 import ru.mitrakov.self.cdm.client.engine.Engine;
 import ru.mitrakov.self.cdm.client.json.commands.cmd.Login;
 import ru.mitrakov.self.cdm.client.networking.INetwork;
@@ -19,9 +16,6 @@ public final class GuiSignInController implements ScreenController {
     private final IGui gui;
     private final Engine engine;
     private final INetwork network;
-    
-    private String login = "";
-    private String password = "";
 
     public GuiSignInController(IGui gui, INetwork network, Engine engine) {
         assert gui != null && network != null && engine != null;
@@ -39,16 +33,6 @@ public final class GuiSignInController implements ScreenController {
     @Override
     public void onEndScreen() {}
     
-    @NiftyEventSubscriber(id = "txt_login")
-    public void onLoginChanged(String id, TextFieldChangedEvent event) {
-        login = event.getText();
-    }
-    
-    @NiftyEventSubscriber(id = "txt_pass")
-    public void onPasswordChanged(String id, TextFieldChangedEvent event) {
-        password = event.getText();
-    }
-    
     @NiftyEventSubscriber(pattern = "txt_.*")
     public void onKeyPressed(String id, NiftyInputEvent event) {
         if (event == NiftyInputEvent.SubmitText)
@@ -57,6 +41,11 @@ public final class GuiSignInController implements ScreenController {
     
     @NiftyEventSubscriber(id = "btn_ok")
     public void onOkClick(String id, ButtonClickedEvent event) {
+        Screen screen = engine.getNifty().getCurrentScreen();
+        TextField txtLogin = screen.findNiftyControl("txt_login", TextField.class); assert txtLogin != null;
+        TextField txtPass = screen.findNiftyControl("txt_pass", TextField.class); assert txtPass != null;
+        String login = txtLogin.getRealText();
+        String password = txtPass.getRealText();
         engine.saveLoginPassword(login, password);
         network.send(new Login(login, password));
     }

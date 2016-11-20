@@ -16,7 +16,7 @@ public final class GuiRenameUnitController extends GuiPopupController implements
     public void onOkClick(String id, ButtonClickedEvent event) {
         Element popup = nifty.findPopupByName(curPopupId); assert popup != null;
         TextField txt = popup.findNiftyControl("txt_rename", TextField.class); assert txt != null;
-        String newName = txt.getDisplayedText();
+        String newName = txt.getRealText();
         if (!newName.isEmpty()) {
             network.send(new RenameUnit(network.getSid(), storage.getToken(), storage.getCurUserUnit(), newName));
             Scheduler.getInstance().run(new Runnable() {
