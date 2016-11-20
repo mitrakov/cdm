@@ -1,15 +1,10 @@
 package ru.mitrakov.self.cdm.client.gui;
 
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.NiftyEventSubscriber;
-import de.lessvoid.nifty.controls.Button;
-import de.lessvoid.nifty.controls.ButtonClickedEvent;
-import de.lessvoid.nifty.controls.Label;
-import de.lessvoid.nifty.controls.TextField;
+import de.lessvoid.nifty.*;
+import de.lessvoid.nifty.screen.*;
+import de.lessvoid.nifty.controls.*;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.events.NiftyMousePrimaryClickedEvent;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
 import java.util.*;
 import ru.mitrakov.self.cdm.client.engine.Engine;
 import ru.mitrakov.self.cdm.client.game.IStorage;
@@ -72,7 +67,7 @@ public final class GuiMainController implements ScreenController {
                 Action action = actions.get(i); assert action != null;
                 switch (action) {
                     case InviteByName: {
-                        Element popup = nifty.createPopup("popup_find");
+                        Element popup = nifty.createPopup("find");
                         nifty.showPopup(nifty.getCurrentScreen(), popup.getId(), null);
                         break;
                     }
@@ -83,8 +78,8 @@ public final class GuiMainController implements ScreenController {
                         gui.gotoLandingScreen();
                         break;
                     case RenameUnit: {
-                        Element popup = nifty.createPopup("popup_rename_unit");
-                        TextField txt = popup.findNiftyControl("popup_txt_rename", TextField.class); assert txt != null;
+                        Element popup = nifty.createPopup("rename_unit");
+                        TextField txt = popup.findNiftyControl("txt_rename", TextField.class); assert txt != null;
                         txt.setText(storage.getUnitNames().get(storage.getCurUserUnit()));
                         nifty.showPopup(nifty.getCurrentScreen(), popup.getId(), null);
                         break;
@@ -104,7 +99,7 @@ public final class GuiMainController implements ScreenController {
         rebuildMenu(event.getElement().getNifty());
     }
     
-    protected void rebuildMenu(Nifty nifty) {
+    public void rebuildMenu(Nifty nifty) {
         assert nifty != null;
         for (int i : new int[] {0, 1, 2, 3, 4, 5}) {
             String id = String.format("btn_main%d", i);
@@ -117,7 +112,7 @@ public final class GuiMainController implements ScreenController {
         }
     }
     
-    protected void rebuildUnits(Nifty nifty) {
+    public void rebuildUnits(Nifty nifty) {
         List<String> unitNames = storage.getUnitNames();
         for (int i = 0; i < Math.min(unitNames.size(), 5); i++) {
             String id = String.format("label_unit%d", i);

@@ -4,6 +4,7 @@ import de.lessvoid.nifty.controls.Label;
 import de.lessvoid.nifty.controls.ListBox;
 import de.lessvoid.nifty.elements.Element;
 import de.lessvoid.nifty.elements.render.TextRenderer;
+import de.lessvoid.nifty.screen.ScreenController;
 import java.util.Collection;
 import javax.swing.JOptionPane;
 import ru.mitrakov.self.cdm.client.Model;
@@ -31,25 +32,25 @@ public final class Gui implements IGui {
 
     @Override
     public void showInvite(Invite cmd) {
-        String s1 = String.format("Игрок %d желает сразиться с Вами\nПринять?", cmd.userId);
-        String s2 = String.format("Вам пришло новое приглашение от игрока %d", cmd.userId);
         if (engine.getContext().isCreated()) {
             engine.hold();
             storage.setEnemySid(cmd.userId);
-            // @mitrakov: don't use findNiftyControl("invite_txt", Label.class); it unexpectedly returns null
-            Element txt = engine.getNifty().getScreen("invite").findElementByName("invite_txt"); assert txt != null;
-            txt.getRenderer(TextRenderer.class).setText(s1);
-            engine.getNifty().gotoScreen("invite");
-        } else if (JOptionPane.showConfirmDialog(null, s2, "Coup de Main", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-            Starter.restartModel(cmd);
+            Element popup = engine.getNifty().createPopup("invite");
+            Label label = popup.findNiftyControl("label_invite", Label.class); assert label != null;
+            label.setText(String.format("Игрок %d желает сразиться с Вами\nПринять?", cmd.userId));
+            engine.getNifty().showPopup(engine.getNifty().getCurrentScreen(), popup.getId(), null);
+        } else {
+            String s = String.format("Вам пришло новое приглашение от игрока %d", cmd.userId);
+            if (JOptionPane.showConfirmDialog(null, s, "Coup de Main", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+                Starter.restartModel(cmd);
         }
     }
     
     @Override
     public void showReject(Reject cmd) {
         engine.hold();
-        Element popup = engine.getNifty().createPopup("popup_reject");
-        Label label = popup.findNiftyControl("lbl_reject", Label.class); assert label != null;
+        Element popup = engine.getNifty().createPopup("reject");
+        Label label = popup.findNiftyControl("label_reject", Label.class); assert label != null;
         label.setText(String.format("Игрок %d отказался играть с Вами", cmd.enemySid));
         engine.getNifty().showPopup(engine.getNifty().getCurrentScreen(), popup.getId(), null);
     }
@@ -57,8 +58,8 @@ public final class Gui implements IGui {
     @Override
     public void showVictory(String winnerName) {
         engine.hold();
-        Element popup = engine.getNifty().createPopup("popup_victory");
-        Label label = popup.findNiftyControl("lbl_victory", Label.class); assert label != null;
+        Element popup = engine.getNifty().createPopup("victory");
+        Label label = popup.findNiftyControl("label_victory", Label.class); assert label != null;
         label.setText(String.format("Игрок %s одержал победу!", winnerName));
         engine.getNifty().showPopup(engine.getNifty().getCurrentScreen(), popup.getId(), null);
     }
@@ -81,7 +82,11 @@ public final class Gui implements IGui {
     
     @Override
     public void update() {
-        engine.getNifty().getCurrentScreen().startScreen();
+        // @mitrakov: earlier I use "engine.getNifty().getCurrentScreen().startScreen()"
+        // but it appeared to be erroneous: Nifty throws a lot of warnings and exceptions
+        ScreenController controller = engine.getNifty().getCurrentScreen().getScreenController();
+        if (controller instanceof GuiMainController)
+            ((GuiMainController)controller).rebuildUnits(engine.getNifty());
     }
     
     @Override

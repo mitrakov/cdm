@@ -56,15 +56,14 @@ public final class Model {
         ScreenController sc3 = new GuiSignUpController(gui, network, engine);
         ScreenController sc4 = new GuiMainController(gui, network, storage, engine);
         ScreenController sc5 = new GuiSettingsController(gui, engine, storage);
-        ScreenController sc6 = new GuiInviteController(gui, storage, network);
-        ScreenController sc7 = new GuiWeaponController(gui, battleManager);
+        ScreenController sc6 = new GuiWeaponController(gui, battleManager);
             
         // set up objects
         network.setHandler(firstHandler);
         network.start();
         
         // start jMonkey Engine!
-        engine.setScreenControllers(sc1, sc2, sc3, sc4, sc5, sc6, sc7);
+        engine.setScreenControllers(sc1, sc2, sc3, sc4, sc5, sc6);
         engine.setInputController(inputController);
         engine.start();
         return this;

@@ -55,13 +55,13 @@ public final class GuiSignInController implements ScreenController {
             onOkClick(id, null);
     }
     
-    @NiftyEventSubscriber(id = "ok")
+    @NiftyEventSubscriber(id = "btn_ok")
     public void onOkClick(String id, ButtonClickedEvent event) {
         engine.saveLoginPassword(login, password);
         network.send(new Login(login, password));
     }
     
-    @NiftyEventSubscriber(id = "cancel")
+    @NiftyEventSubscriber(id = "btn_cancel")
     public void onCancelClick(String id, ButtonClickedEvent event) {
         gui.gotoScreen("landing");
     }

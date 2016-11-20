@@ -11,13 +11,13 @@ import ru.mitrakov.self.cdm.client.json.commands.cmd.GetUserId;
 public final class GuiFindController extends GuiPopupController implements Controller {
     private String nameToFind = "";
     
-    @NiftyEventSubscriber(id = "popup_txt_find")
+    @NiftyEventSubscriber(id = "txt_find")
     public void onNameChanged(String id, TextFieldChangedEvent event) {
         nameToFind = event.getText();
     }
     
     @Override
-    @NiftyEventSubscriber(id = "popup_find_ok")
+    @NiftyEventSubscriber(id = "btn_ok")
     public void onOkClick(String id, ButtonClickedEvent event) {
         if (!nameToFind.isEmpty()) {
             network.send(new GetUserId(network.getSid(), storage.getToken(), nameToFind));

@@ -52,22 +52,23 @@ public class GuiPopupController implements Controller {
     @Override
     public boolean inputEvent(NiftyInputEvent inputEvent) {return true;}
     
-    @NiftyEventSubscriber(pattern = "popup_txt_.*")
+    @NiftyEventSubscriber(pattern = "txt_.*")
     public void onKeyPressed(String id, NiftyInputEvent event) {
         if (event == NiftyInputEvent.SubmitText)
             onOkClick(id, null);
     }
     
+    // should be overriden by subclasses
     public void onOkClick(String id, ButtonClickedEvent event) {
-        onCloseClick(id, null); // should be overriden by subclasses
+        onCloseClick(id, null);
     }
     
-    @NiftyEventSubscriber(id = "popup_close")
+    @NiftyEventSubscriber(id = "btn_close")
     public void onCloseClick(String id, ButtonClickedEvent event) {
         nifty.closePopup(curPopupId);
     }
     
-    @NiftyEventSubscriber(id = "popup_goto_main")
+    @NiftyEventSubscriber(id = "btn_goto_main")
     public void onGotoMainClick(String id, ButtonClickedEvent event) {
         nifty.gotoScreen("main");
         onCloseClick(id, event);
