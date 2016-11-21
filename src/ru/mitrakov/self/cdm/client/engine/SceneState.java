@@ -1,9 +1,6 @@
 package ru.mitrakov.self.cdm.client.engine;
 
-import ru.mitrakov.self.cdm.client.game.IBattle;
-import ru.mitrakov.self.cdm.client.game.Cell;
-import ru.mitrakov.self.cdm.client.game.Unit;
-import ru.mitrakov.self.cdm.client.game.Battle;
+import ru.mitrakov.self.cdm.client.game.*;
 import com.jme3.math.*;
 import com.jme3.scene.*;
 import com.jme3.app.state.*;
@@ -111,9 +108,12 @@ public class SceneState extends AbstractAppState {
                 cleanupUnit();
                 cleanupCell();
                 if (activeUnit != null) {
-                    Camera camera = engine.getCamera(); assert camera != null;
-                    activeUnit.setLocalRotation(camera.getRotation());
+                    Quaternion qUnit = activeUnit.getLocalRotation();
+                    Quaternion qCam = engine.getCamera().getRotation();
+                    Quaternion q = new Quaternion(qUnit.getX(), qCam.getY(), qUnit.getZ(), qCam.getW());
+                    activeUnit.setLocalRotation(q);
                 }
+                break;
             }
             default: {
                 cleanupUnit();
