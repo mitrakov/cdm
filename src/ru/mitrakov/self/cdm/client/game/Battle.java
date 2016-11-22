@@ -37,8 +37,6 @@ public final class Battle implements IBattle {
 
     @Override
     public void start() {
-        //if (sceneState != null)   WTF? 
-            //sceneState.cleanup();
         sceneState = new SceneState(this);
         engine.getStateManager().attach(sceneState);
     }
@@ -100,16 +98,16 @@ public final class Battle implements IBattle {
     public void updateMyUnit(int unitId, int x, int y, int hp, int state) {
         check();
         for (Unit unit : myUnits) {
-            // updating unit info
             if (unit.unitId == unitId) {
+                // updating unit info
                 unit.x = x;
                 unit.y = y;
                 unit.hp = hp;
                 unit.state = state;
+                // move camera on current unit
+                if (unit == curUnit && mode == BattleMode.MyTurn)
+                    sceneState.moveCameraOnUnit(unit, aggressor);
             }
-            // move camera on current unit
-            if (unit == curUnit)
-                sceneState.moveCameraOnUnit(unit, aggressor);
         }
     }
 
