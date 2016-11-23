@@ -153,19 +153,35 @@
             </panel>
         </layer>
     </screen>
-    
-    
-    
+
+
+
     <!-- ======= IN-GAME SCREENS ======= -->
     <!-- choose weapon screen -->
     <screen id="weapon" controller="ru.mitrakov.self.cdm.client.gui.GuiWeaponController">
-        <layer childLayout="center">
+        <layer childLayout="center" visibleToMouse="true">     <!-- visibleToMouse=true to prevent forwarding mouse events to the game -->
             <panel width="30%" height="30%" align="center" valign="center" childLayout="vertical" backgroundColor="#55a5" padding="10">                
                 <control id="lst_weapon" name="listBox" width="*" height="100%" 
                          vertical="optional" horizontal="optional" 
                          displayItems="6" selectionMode="Single" forceSelection="true"
                          childLayout="vertical" visibleToMouse="true">
                 </control>
+            </panel>
+        </layer>
+    </screen>
+    
+    <!-- give up dialog -->
+    <screen id="give_up" controller="ru.mitrakov.self.cdm.client.gui.GuiGiveUpController">
+        <layer childLayout="center" visibleToMouse="true">     <!-- visibleToMouse=true to prevent forwarding mouse events to the game -->
+            <panel width="75%" height="75%" align="center" valign="center" childLayout="vertical" backgroundColor="#55a5" padding="10">
+                <panel height="*" childLayout="center" backgroundColor="#55aa" padding="10">
+                    <control text="Вы действительно хотите сдаться?" name="label" width="95%" height="80px" align="center" valign="center" font="de/fonts/trix.fnt"/>
+                </panel>
+                <panel height="10px"/>
+                <panel width="60%" height="35px" align="right" childLayout="horizontal">
+                    <control id="btn_yes" label="Да"  name="button" width="50%" height="40px"/>
+                    <control id="btn_no"  label="Нет" name="button" width="50%" height="40px"/>
+                </panel>
             </panel>
         </layer>
     </screen>

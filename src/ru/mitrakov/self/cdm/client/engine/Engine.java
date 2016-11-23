@@ -45,6 +45,9 @@ public class Engine extends SimpleApplication {
         // attaching Nifty Gui to jMonkey Engine
         guiViewPort.addProcessor(niftyDisplay);
         
+        // unregister default Esc behaviour
+        inputManager.deleteMapping(INPUT_MAPPING_EXIT);
+        
         // unregister default FlyCamera and register our own Camera Input Controller
         stateManager.detach(stateManager.getState(FlyCamAppState.class));
         trixCam = new TrixCamera(cam, inputManager);

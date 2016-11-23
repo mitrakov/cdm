@@ -1,10 +1,7 @@
 package ru.mitrakov.self.cdm.client.engine;
 
 import com.jme3.input.InputManager;
-import ru.mitrakov.self.cdm.client.game.IBattleManager;
-import ru.mitrakov.self.cdm.client.game.Weapon;
-import ru.mitrakov.self.cdm.client.game.Cell;
-import ru.mitrakov.self.cdm.client.game.Unit;
+import ru.mitrakov.self.cdm.client.game.*;
 import com.jme3.input.KeyInput;
 import com.jme3.input.MouseInput;
 import com.jme3.input.controls.*;
@@ -13,8 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import ru.mitrakov.self.cdm.client.game.IStorage;
 import ru.mitrakov.self.cdm.client.gui.IGui;
-import ru.mitrakov.self.cdm.client.json.commands.cmd.Move;
-import ru.mitrakov.self.cdm.client.json.commands.cmd.Strike;
+import ru.mitrakov.self.cdm.client.json.commands.cmd.*;
 import ru.mitrakov.self.cdm.client.networking.INetwork;
 
 /**
@@ -40,19 +36,20 @@ public final class EngineInputController {
     
     public void init() {
         InputManager manager = engine.getInputManager(); assert manager != null;
-        manager.addMapping("CamToggle", new KeyTrigger(KeyInput.KEY_P));
-        manager.addListener(camListener, "CamToggle");
+        manager.addMapping("Esc", new KeyTrigger(KeyInput.KEY_ESCAPE));
+        manager.addListener(escapeListener, "Esc");
         manager.addMapping("Debug", new KeyTrigger(KeyInput.KEY_L));
         manager.addListener(debugListener, "Debug");
         manager.addMapping("OnClick", new MouseButtonTrigger(MouseInput.BUTTON_LEFT));
         manager.addListener(onClickListener, "OnClick");
     }
     
-    private final InputListener camListener = new ActionListener() {
+    private final InputListener escapeListener = new ActionListener() {
         @Override
         public void onAction(String name, boolean isPressed, float tpf) {
             if (isPressed) {
-                // not implemented for TrixCamera
+                if (battleManager.getBattleMode() != IBattle.BattleMode.None)
+                    gui.showGiveUp();
             }
         }
     };

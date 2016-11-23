@@ -11,6 +11,7 @@ import ru.mitrakov.self.cdm.client.json.commands.cmd.*;
 public interface IGui {
     public void showInvite(Invite cmd);
     public void showReject(Reject cmd);
+    public void showGiveUp();
     public void showVictory(String winnerName);
     public void showWeapon(Collection<? extends Weapon> weapons);
     public void hide();

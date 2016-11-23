@@ -1,20 +1,14 @@
 package ru.mitrakov.self.cdm.client.gui;
 
-import de.lessvoid.nifty.controls.Label;
-import de.lessvoid.nifty.controls.ListBox;
+import de.lessvoid.nifty.controls.*;
 import de.lessvoid.nifty.elements.Element;
-import de.lessvoid.nifty.elements.render.TextRenderer;
 import de.lessvoid.nifty.screen.ScreenController;
 import java.util.Collection;
 import javax.swing.JOptionPane;
-import ru.mitrakov.self.cdm.client.Model;
 import ru.mitrakov.self.cdm.client.Starter;
 import ru.mitrakov.self.cdm.client.engine.Engine;
-import ru.mitrakov.self.cdm.client.game.IStorage;
-import ru.mitrakov.self.cdm.client.game.Weapon;
-import ru.mitrakov.self.cdm.client.json.commands.Cmd;
-import ru.mitrakov.self.cdm.client.json.commands.cmd.Invite;
-import ru.mitrakov.self.cdm.client.json.commands.cmd.Reject;
+import ru.mitrakov.self.cdm.client.game.*;
+import ru.mitrakov.self.cdm.client.json.commands.cmd.*;
 
 /**
  *
@@ -53,6 +47,12 @@ public final class Gui implements IGui {
         Label label = popup.findNiftyControl("label_reject", Label.class); assert label != null;
         label.setText(String.format("Игрок %d отказался играть с Вами", cmd.enemySid));
         engine.getNifty().showPopup(engine.getNifty().getCurrentScreen(), popup.getId(), null);
+    }
+    
+    @Override
+    public void showGiveUp() {
+        engine.hold();
+        engine.getNifty().gotoScreen("give_up");
     }
     
     @Override
