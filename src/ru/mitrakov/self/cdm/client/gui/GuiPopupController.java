@@ -52,10 +52,16 @@ public class GuiPopupController implements Controller {
     @Override
     public boolean inputEvent(NiftyInputEvent inputEvent) {return true;}
     
-    @NiftyEventSubscriber(pattern = "txt_.*")
+    @NiftyEventSubscriber(pattern = "txt_.*")   // event will be handled only once!
     public void onKeyPressed(String id, NiftyInputEvent event) {
         if (event == NiftyInputEvent.SubmitText)
             onOkClick(id, null);
+    }
+    
+    @NiftyEventSubscriber(pattern = ".*")   // event will be handled only once!
+    public void onEscPressed(String id, NiftyInputEvent event) {
+        if (event == NiftyInputEvent.Escape)
+            onCloseClick(id, null);
     }
     
     // should be overriden by subclasses

@@ -145,7 +145,7 @@
     </screen>
     
     <!-- options screen -->
-    <screen id="settings" controller="ru.mitrakov.self.cdm.client.gui.GuiSettingsController">
+    <screen id="settings" controller="ru.mitrakov.self.cdm.client.gui.GuiSettingsController" inputMapping="ru.mitrakov.self.cdm.client.gui.TrixInputMapping">
         <layer childLayout="center">
             <panel width="50%" height="50%" align="center" valign="center" childLayout="vertical" backgroundColor="#55a5" padding="10">
                 <control id="btn_logout" label="Заверш. сеанс" name="button" width="50%" height="40px" align="center" marginTop="10px"/>
@@ -158,7 +158,7 @@
 
     <!-- ======= IN-GAME SCREENS ======= -->
     <!-- choose weapon screen -->
-    <screen id="weapon" controller="ru.mitrakov.self.cdm.client.gui.GuiWeaponController">
+    <screen id="weapon" controller="ru.mitrakov.self.cdm.client.gui.GuiWeaponController" inputMapping="ru.mitrakov.self.cdm.client.gui.TrixInputMapping">
         <layer childLayout="center" visibleToMouse="true">     <!-- visibleToMouse=true to prevent forwarding mouse events to the game -->
             <panel width="30%" height="30%" align="center" valign="center" childLayout="vertical" backgroundColor="#55a5" padding="10">                
                 <control id="lst_weapon" name="listBox" width="*" height="100%" 

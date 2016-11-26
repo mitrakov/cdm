@@ -33,10 +33,16 @@ public final class GuiSignInController implements ScreenController {
     @Override
     public void onEndScreen() {}
     
-    @NiftyEventSubscriber(pattern = "txt_.*")
+    @NiftyEventSubscriber(pattern = "txt_.*")  // event will be handled only once!
     public void onKeyPressed(String id, NiftyInputEvent event) {
         if (event == NiftyInputEvent.SubmitText)
             onOkClick(id, null);
+    }
+    
+    @NiftyEventSubscriber(pattern = ".*")   // event will be handled only once!
+    public void onEscPressed(String id, NiftyInputEvent event) {
+        if (event == NiftyInputEvent.Escape)
+            onCancelClick(id, null);
     }
     
     @NiftyEventSubscriber(id = "btn_ok")

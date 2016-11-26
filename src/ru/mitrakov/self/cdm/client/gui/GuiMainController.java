@@ -80,8 +80,11 @@ public final class GuiMainController implements ScreenController {
                     case RenameUnit: {
                         Element popup = nifty.createPopup("rename_unit");
                         TextField txt = popup.findNiftyControl("txt_rename", TextField.class); assert txt != null;
-                        txt.setText(storage.getUnitNames().get(storage.getCurUserUnit()));
-                        nifty.showPopup(nifty.getCurrentScreen(), popup.getId(), null);
+                        List<String> names = storage.getUnitNames();
+                        if (names.size() > storage.getCurUserUnit()) { // in fact: if names == 5
+                            txt.setText(names.get(storage.getCurUserUnit()));
+                            nifty.showPopup(nifty.getCurrentScreen(), popup.getId(), null);
+                        }
                         break;
                     }
                     default:

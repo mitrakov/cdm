@@ -39,6 +39,12 @@ public final class GuiSignUpController implements ScreenController {
             onOkClick(id, null);
     }
     
+    @NiftyEventSubscriber(pattern = ".*")   // event will be handled only once!
+    public void onEscPressed(String id, NiftyInputEvent event) {
+        if (event == NiftyInputEvent.Escape)
+            onCancelClick(id, null);
+    }
+    
     @NiftyEventSubscriber(id = "btn_ok")
     public void onOkClick(String id, ButtonClickedEvent event) {
         Screen screen = engine.getNifty().getCurrentScreen();

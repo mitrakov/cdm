@@ -3,6 +3,7 @@ package ru.mitrakov.self.cdm.client.gui;
 import de.lessvoid.nifty.Nifty;
 import de.lessvoid.nifty.controls.*;
 import de.lessvoid.nifty.NiftyEventSubscriber;
+import de.lessvoid.nifty.input.NiftyInputEvent;
 import de.lessvoid.nifty.screen.Screen;
 import de.lessvoid.nifty.screen.ScreenController;
 import ru.mitrakov.self.cdm.client.game.IStorage;
@@ -33,6 +34,12 @@ public final class GuiGiveUpController implements ScreenController {
 
     @Override
     public void onEndScreen() {}
+    
+    @NiftyEventSubscriber(pattern = ".*")   // event will be handled only once!
+    public void onEscPressed(String id, NiftyInputEvent event) {
+        if (event == NiftyInputEvent.Escape)
+            onNoClick(id, null);
+    }
     
     @NiftyEventSubscriber(id = "btn_yes")
     public void onYesClick(String id, ButtonClickedEvent event) {

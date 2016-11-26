@@ -1,10 +1,9 @@
 package ru.mitrakov.self.cdm.client.gui;
 
-import de.lessvoid.nifty.Nifty;
-import de.lessvoid.nifty.NiftyEventSubscriber;
+import de.lessvoid.nifty.*;
+import de.lessvoid.nifty.screen.*;
 import de.lessvoid.nifty.controls.ButtonClickedEvent;
-import de.lessvoid.nifty.screen.Screen;
-import de.lessvoid.nifty.screen.ScreenController;
+import de.lessvoid.nifty.input.NiftyInputEvent;
 import ru.mitrakov.self.cdm.client.engine.Engine;
 import ru.mitrakov.self.cdm.client.game.IStorage;
 
@@ -12,7 +11,7 @@ import ru.mitrakov.self.cdm.client.game.IStorage;
  *
  * @author Tommy
  */
-public final class GuiSettingsController implements ScreenController {
+public final class GuiSettingsController implements ScreenController, KeyInputHandler {
     private final IGui gui;
     private final Engine engine;
     private final IStorage storage;
@@ -32,6 +31,14 @@ public final class GuiSettingsController implements ScreenController {
 
     @Override
     public void onEndScreen() {}
+    
+    @Override
+    public boolean keyEvent(NiftyInputEvent event) {
+        // ....
+        if (event == NiftyInputEvent.Escape)
+            onBackClick("", null);
+        return true;
+    }
     
     @NiftyEventSubscriber(id = "btn_logout")
     public void onLogoutClick(String id, ButtonClickedEvent event) {
