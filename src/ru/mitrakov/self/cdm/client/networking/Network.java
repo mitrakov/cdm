@@ -61,7 +61,7 @@ public class Network implements INetwork {
             String jsonStr = Parser.convertToJson(cmd);
             System.out.println("Trying to send:" + jsonStr);
             byte[] data = jsonStr.getBytes();
-            this.sock.send(new DatagramPacket(data, data.length, InetAddress.getByName("localhost"), 33995));
+            this.sock.send(new DatagramPacket(data, data.length, InetAddress.getByName("192.168.1.3"), 33995));
         } catch (IOException ex) {
             Logger.getLogger(Network.class.getName()).log(Level.SEVERE, null, ex);
         }
