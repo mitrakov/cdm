@@ -133,6 +133,12 @@ public final class Battle implements IBattle {
             }
         }
     }
+    
+    @Override
+    public void showAction(List<Integer> path) {
+        if (!path.isEmpty())
+            sceneState.showBullet(path.get(0), path.get(path.size()-1));
+    }
 
     @Override
     public void destroy() {

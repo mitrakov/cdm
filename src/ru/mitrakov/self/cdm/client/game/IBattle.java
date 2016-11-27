@@ -1,6 +1,7 @@
 package ru.mitrakov.self.cdm.client.game;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -19,6 +20,7 @@ public interface IBattle {
     public void updateEnemyUnitsCount(int count);
     public void updateEnemyUnit(int unitId, int x, int y, int hp, int state);
     public void updateWeapons(int unitId, Collection<? extends Weapon> weapons);
+    public void showAction(List<Integer> path);
     public void destroy();
     
     public Unit             getCurUnit();

@@ -32,9 +32,10 @@ public final class BattleHandler extends Handler {
     public void handle(Cmd cmd) {
         if (cmd instanceof ResponseState)
             handleNewState(((ResponseState)cmd).state);
-        else if (cmd instanceof ResponseAction)
+        else if (cmd instanceof ResponseAction) {
             handleNewState(((ResponseAction)cmd).state);
-        else if (cmd instanceof Reject)
+            battleManager.showAction(((ResponseAction)cmd).path);
+        } else if (cmd instanceof Reject)
             gui.showReject((Reject)cmd);
         else if (cmd instanceof ResponseFinished) {
             battleManager.destroyBattle();

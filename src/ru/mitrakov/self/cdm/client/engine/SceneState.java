@@ -9,6 +9,7 @@ import com.jme3.renderer.Camera;
 import com.jme3.app.Application;
 import com.jme3.scene.shape.Box;
 import com.jme3.material.Material;
+import com.jme3.scene.shape.Sphere;
 import ru.mitrakov.self.cdm.client.TrixCamera;
 import static ru.mitrakov.self.cdm.client.game.Cell.CellType.*;
 
@@ -182,6 +183,10 @@ public class SceneState extends AbstractAppState {
         trixCam.setMoveAroundMode(unitXyz, dir);
     }
     
+    public void showBullet(int startIdx, int endIdx) {
+        node.attachChild(createBullet(startIdx, endIdx));
+    }
+    
     public Unit getUnit() {
         Spatial s = getUnitSpatial();
         if (s != null)
@@ -275,11 +280,11 @@ public class SceneState extends AbstractAppState {
         Box b = new Box(.5f, .5f, .5f);
         Geometry g = new Geometry("Box", b);
         g.setUserData("cell", cell);
+        g.setLocalTranslation(cell.idx % Battle.WIDTH, -1, cell.idx / Battle.WIDTH);
 
         Material mat = new Material(engine.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        g.setMaterial(mat);
-        g.setLocalTranslation(cell.idx % Battle.WIDTH, -1, cell.idx / Battle.WIDTH);
         mat.setColor("Color", getColor(cell.cellType));
+        g.setMaterial(mat);
         
         switch(cell.cellType) {
             case CellStone: 
@@ -291,6 +296,18 @@ public class SceneState extends AbstractAppState {
             default:
         }
 
+        return g;
+    }
+    
+    protected Spatial createBullet(int startIdx, int endIdx) {
+        Sphere s = new Sphere(10, 10, .09f);
+        Geometry g = new Geometry("bullet", s);
+        
+        Material mat = new Material(engine.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        mat.setColor("Color", ColorRGBA.Blue);
+        g.setMaterial(mat);
+        
+        g.addControl(new BulletControl(startIdx, endIdx));
         return g;
     }
     

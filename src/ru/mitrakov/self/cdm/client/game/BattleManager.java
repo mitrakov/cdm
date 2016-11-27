@@ -77,6 +77,12 @@ public final class BattleManager implements IBattleManager {
             }
         }
     }
+    
+    @Override
+    public void showAction(List<Integer> path) {
+        if (battle != null)
+            battle.showAction(path);
+    }
 
     @Override
     public void setCurAggressorTurn(boolean value) {
