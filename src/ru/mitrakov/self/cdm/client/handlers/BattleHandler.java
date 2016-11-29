@@ -7,6 +7,8 @@ import java.util.*;
 import ru.mitrakov.self.cdm.client.Utils;
 import ru.mitrakov.self.cdm.client.game.Cell;
 import ru.mitrakov.self.cdm.client.game.Cell.CellType;
+import ru.mitrakov.self.cdm.client.game.IBattle;
+import ru.mitrakov.self.cdm.client.game.IBattle.ActionType;
 import ru.mitrakov.self.cdm.client.game.IBattleManager;
 import ru.mitrakov.self.cdm.client.game.Weapon;
 import ru.mitrakov.self.cdm.client.gui.IGui;
@@ -33,8 +35,13 @@ public final class BattleHandler extends Handler {
         if (cmd instanceof ResponseState)
             handleNewState(((ResponseState)cmd).state);
         else if (cmd instanceof ResponseAction) {
+            // get actionType by its index
+            ActionType[] types = ActionType.values();
+            int action = ((ResponseAction)cmd).action;
+            ActionType actionType = action < types.length ? types[action] : ActionType.Move;
+            // go
             handleNewState(((ResponseAction)cmd).state);
-            battleManager.showAction(((ResponseAction)cmd).path);
+            battleManager.showAction(actionType, ((ResponseAction)cmd).path);
         } else if (cmd instanceof Reject)
             gui.showReject((Reject)cmd);
         else if (cmd instanceof ResponseFinished) {

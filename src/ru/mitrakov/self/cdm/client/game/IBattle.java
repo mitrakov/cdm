@@ -9,6 +9,7 @@ import java.util.List;
  */
 public interface IBattle {
     public static enum BattleMode {None, MyTurn, EnemyTurn, MyTurnChooseUnit, MyTurnReadyToFire}
+    public static enum ActionType {Move, Fist, Bullet}
     
     public void start();
     public void newTurn(boolean curAggressorTurn);
@@ -20,7 +21,7 @@ public interface IBattle {
     public void updateEnemyUnitsCount(int count);
     public void updateEnemyUnit(int unitId, int x, int y, int hp, int state);
     public void updateWeapons(int unitId, Collection<? extends Weapon> weapons);
-    public void showAction(List<Integer> path);
+    public void showAction(ActionType actionType, List<Integer> path);
     public void destroy();
     
     public Unit             getCurUnit();

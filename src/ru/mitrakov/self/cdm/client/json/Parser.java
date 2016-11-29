@@ -74,7 +74,7 @@ public class Parser {
                         lst1.add(node.asInt());
                     for (JsonNode node : argsNode.get("state"))
                         lst2.add(node.asText());
-                    return new ResponseAction(sidNode.asInt(), lst1, lst2);
+                    return new ResponseAction(sidNode.asInt(), argsNode.get("act").asInt(), lst1, lst2);
                 default: break;
             }
             
@@ -179,7 +179,8 @@ public class Parser {
             for (int i : ((ResponseAction)cmd).path)
                 pathNode.add(i);
             for (String s : ((ResponseAction)cmd).state)
-                pathNode.add(s);
+                stateNode.add(s);
+            argsNode.put("act", ((ResponseAction)cmd).action);
             argsNode.put("path", pathNode);
             argsNode.put("state", stateNode);
         } else {

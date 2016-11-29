@@ -2,6 +2,7 @@ package ru.mitrakov.self.cdm.client.game;
 
 import java.util.*;
 import ru.mitrakov.self.cdm.client.engine.Engine;
+import ru.mitrakov.self.cdm.client.game.IBattle.ActionType;
 
 /**
  *
@@ -79,9 +80,9 @@ public final class BattleManager implements IBattleManager {
     }
     
     @Override
-    public void showAction(List<Integer> path) {
+    public void showAction(ActionType actionType, List<Integer> path) {
         if (battle != null)
-            battle.showAction(path);
+            battle.showAction(actionType, path);
     }
 
     @Override

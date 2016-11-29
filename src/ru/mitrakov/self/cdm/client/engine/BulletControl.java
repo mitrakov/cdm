@@ -13,13 +13,14 @@ public class BulletControl extends AbstractControl {
     protected final Vector3f startPoint;
     protected final Vector3f endPoint;
     protected final Vector3f moveVector;
+    protected final float v0 = 6;
     
     private boolean init = false;
 
     public BulletControl(int startIdx, int endIdx) {
         startPoint = new Vector3f(startIdx % Battle.WIDTH, .3f, startIdx / Battle.WIDTH);
         endPoint = new Vector3f(endIdx % Battle.WIDTH, .3f, endIdx / Battle.WIDTH);
-        moveVector = endPoint.subtract(startPoint).normalize().divide(10);
+        moveVector = endPoint.subtract(startPoint).normalize();
     }
     
     @Override
@@ -32,10 +33,13 @@ public class BulletControl extends AbstractControl {
         }
 
         // move it!
-        if (spatial.getLocalTranslation().distance(endPoint) < moveVector.length()) {  // if spatial.xyz == endPoint
+        if (spatial.getLocalTranslation().distance(endPoint) < .5f) {  // if reached endPoint, stop it
             spatial.removeFromParent();
             spatial.removeControl(this);
-        } else spatial.move(moveVector);
+        } else {
+            float dt = tpf;        // scale time (in theory: dt = tpf)
+            spatial.move(moveVector.mult(v0*dt));
+        }
     }
 
     @Override
