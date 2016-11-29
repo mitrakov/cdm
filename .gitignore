@@ -3,3 +3,4 @@ build/*
 build.xml
 *.dll
 nbproject/private/
+*.log
