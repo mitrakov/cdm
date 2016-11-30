@@ -142,6 +142,11 @@ public final class Battle implements IBattle {
                     sceneState.showBullet(path.get(0), path.get(path.size()-1));
                 break;
             }
+            case Shell: {
+                if (!path.isEmpty())
+                    sceneState.showShell(path.get(0), path.get(path.size()-1));
+                break;
+            }
             default:
         }
     }
@@ -196,7 +201,4 @@ public final class Battle implements IBattle {
         System.out.println("Battle FINALIZED!!!");
         super.finalize();
     }
-    
-    
-    
 }

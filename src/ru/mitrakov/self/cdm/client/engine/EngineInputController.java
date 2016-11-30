@@ -118,7 +118,7 @@ public final class EngineInputController {
             Weapon weapon = battleManager.getCurWeapon();
             if (unit != null && weapon != null) {
                 int direction = state.getCurrentDirection();
-                network.send(new Strike(network.getSid(), storage.getToken(), unit.unitId, weapon.type.ordinal(), direction, 32, 33, 1));
+                network.send(new Strike(network.getSid(), storage.getToken(), unit.unitId, weapon.type.ordinal(), direction, 104, 90, 1));
                 battleManager.setCurUnit(unit); // return to MyTurn mode
             }
         }

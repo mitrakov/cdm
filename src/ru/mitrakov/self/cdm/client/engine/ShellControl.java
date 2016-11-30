@@ -47,7 +47,7 @@ public class ShellControl extends AbstractControl {
             spatial.removeFromParent();
             spatial.removeControl(this);
         } else {
-            float dt = tpf/2;      // scale time (in theory: dt = tpf)
+            float dt = tpf;        // scale time (in theory: dt = tpf)
             t += dt;               // inc total time
             spatial.move(moveVector.mult(v0*dt*cos(alpha)));
             spatial.getLocalTranslation().setY(y0 + v0*t*sin(alpha) - g*t*t/2);

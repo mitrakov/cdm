@@ -9,7 +9,7 @@ import java.util.List;
  */
 public interface IBattle {
     public static enum BattleMode {None, MyTurn, EnemyTurn, MyTurnChooseUnit, MyTurnReadyToFire}
-    public static enum ActionType {Move, Fist, Bullet}
+    public static enum ActionType {Move, Fist, Bullet, Shell, Outbirst}
     
     public void start();
     public void newTurn(boolean curAggressorTurn);

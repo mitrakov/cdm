@@ -187,6 +187,10 @@ public class SceneState extends AbstractAppState {
         node.attachChild(createBullet(startIdx, endIdx));
     }
     
+    public void showShell(int startIdx, int endIdx) {
+        node.attachChild(createShell(startIdx, endIdx));
+    }
+    
     public Unit getUnit() {
         Spatial s = getUnitSpatial();
         if (s != null)
@@ -300,7 +304,7 @@ public class SceneState extends AbstractAppState {
     }
     
     protected Spatial createBullet(int startIdx, int endIdx) {
-        Sphere s = new Sphere(10, 10, .09f);
+        Sphere s = new Sphere(16, 16, .09f);
         Geometry g = new Geometry("bullet", s);
         
         Material mat = new Material(engine.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
@@ -308,6 +312,18 @@ public class SceneState extends AbstractAppState {
         g.setMaterial(mat);
         
         g.addControl(new BulletControl(startIdx, endIdx));
+        return g;
+    }
+    
+    protected Spatial createShell(int startIdx, int endIdx) {
+        Sphere s = new Sphere(32, 32, .16f);
+        Geometry g = new Geometry("shell", s);
+        
+        Material mat = new Material(engine.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        mat.setColor("Color", ColorRGBA.White);
+        g.setMaterial(mat);
+        
+        g.addControl(new ShellControl(startIdx, endIdx, FastMath.PI/3));
         return g;
     }
     
