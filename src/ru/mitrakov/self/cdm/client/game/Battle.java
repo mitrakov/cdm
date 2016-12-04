@@ -137,6 +137,10 @@ public final class Battle implements IBattle {
     @Override
     public void showAction(ActionType actionType, List<Integer> path) {
         switch (actionType) {
+            case Fist: {
+                // TODO
+                break;
+            }
             case Bullet: {
                 if (!path.isEmpty())
                     sceneState.showBullet(path.get(0), path.get(path.size()-1));
@@ -145,6 +149,10 @@ public final class Battle implements IBattle {
             case Shell: {
                 if (!path.isEmpty())
                     sceneState.showShell(path.get(0), path.get(path.size()-1));
+                break;
+            }
+            case Outbirst: {
+                // TODO
                 break;
             }
             default:

@@ -2,18 +2,18 @@ package ru.mitrakov.self.cdm.client.handlers;
 
 import ru.mitrakov.self.cdm.client.json.commands.Cmd;
 import ru.mitrakov.self.cdm.client.json.commands.cmd.ResponseState;
-import ru.mitrakov.self.cdm.client.json.commands.cmd.ResponseAction;
+import ru.mitrakov.self.cdm.client.json.commands.cmd.ResponseMove;
 import java.util.*;
 import ru.mitrakov.self.cdm.client.Utils;
 import ru.mitrakov.self.cdm.client.game.Cell;
 import ru.mitrakov.self.cdm.client.game.Cell.CellType;
-import ru.mitrakov.self.cdm.client.game.IBattle;
 import ru.mitrakov.self.cdm.client.game.IBattle.ActionType;
 import ru.mitrakov.self.cdm.client.game.IBattleManager;
 import ru.mitrakov.self.cdm.client.game.Weapon;
 import ru.mitrakov.self.cdm.client.gui.IGui;
 import ru.mitrakov.self.cdm.client.json.commands.cmd.Reject;
 import ru.mitrakov.self.cdm.client.json.commands.cmd.ResponseFinished;
+import ru.mitrakov.self.cdm.client.json.commands.cmd.ResponseStrike;
 
 /**
  *
@@ -34,17 +34,20 @@ public final class BattleHandler extends Handler {
     public void handle(Cmd cmd) {
         if (cmd instanceof ResponseState)
             handleNewState(((ResponseState)cmd).state);
-        else if (cmd instanceof ResponseAction) {
-            // get actionType by its index
+        else if (cmd instanceof ResponseMove) {
+            handleNewState(((ResponseMove)cmd).state);
+        } else if (cmd instanceof ResponseStrike) {
             ActionType[] types = ActionType.values();
-            int action = ((ResponseAction)cmd).action;
-            ActionType actionType = action < types.length ? types[action] : ActionType.Move;
-            // go
-            handleNewState(((ResponseAction)cmd).state);
-            battleManager.showAction(actionType, ((ResponseAction)cmd).path);
-        } else if (cmd instanceof Reject)
+            for (List<Integer> lst : ((ResponseStrike)cmd).arrays) {
+                assert lst.size() > 0;
+                int action = lst.get(0);
+                ActionType actionType = action < types.length ? types[action] : ActionType.None;
+                battleManager.showAction(actionType, lst.subList(1, lst.size()));
+            }
+            handleNewState(((ResponseStrike)cmd).state);
+        } else if (cmd instanceof Reject) {
             gui.showReject((Reject)cmd);
-        else if (cmd instanceof ResponseFinished) {
+        } else if (cmd instanceof ResponseFinished) {
             battleManager.destroyBattle();
             gui.showVictory(((ResponseFinished)cmd).winnerName);
         }

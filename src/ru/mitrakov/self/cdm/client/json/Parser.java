@@ -67,14 +67,28 @@ public class Parser {
                     for (JsonNode node : argsNode.get("names"))
                         names.add(node.asText());
                     return new ResponseUnits(sidNode.asInt(), names, argsNode.get("cap").asInt());
-                case "_ac":
+                case "_mov": {
                     List<Integer> lst1 = new LinkedList<>();
                     List<String> lst2 = new LinkedList<>();
                     for (JsonNode node : argsNode.get("path"))
                         lst1.add(node.asInt());
                     for (JsonNode node : argsNode.get("state"))
                         lst2.add(node.asText());
-                    return new ResponseAction(sidNode.asInt(), argsNode.get("act").asInt(), lst1, lst2);
+                    return new ResponseMove(sidNode.asInt(), lst1, lst2);
+                }
+                case "_str": {
+                    List<List<Integer>> lst1 = new LinkedList<>();
+                    List<String> lst2 = new LinkedList<>();
+                    for (JsonNode n : argsNode.get("arrays")) {
+                        List<Integer> w = new ArrayList<>();
+                        for (JsonNode m : n)
+                            w.add(m.asInt());
+                        lst1.add(w);
+                    }
+                    for (JsonNode node : argsNode.get("state"))
+                        lst2.add(node.asText());
+                    return new ResponseStrike(sidNode.asInt(), lst1, lst2);
+                }
                 default: break;
             }
             
@@ -88,11 +102,12 @@ public class Parser {
         ObjectMapper mapper = new ObjectMapper();
         
         // preparing objects/arrays
-        ObjectNode rootNode = mapper.createObjectNode();
-        ObjectNode argsNode = mapper.createObjectNode();
-        ArrayNode stateNode = mapper.createArrayNode();
-        ArrayNode namesNode = mapper.createArrayNode();
-        ArrayNode pathNode  = mapper.createArrayNode();
+        ObjectNode rootNode  = mapper.createObjectNode();
+        ObjectNode argsNode  = mapper.createObjectNode();
+        ArrayNode stateNode  = mapper.createArrayNode();
+        ArrayNode namesNode  = mapper.createArrayNode();
+        ArrayNode pathNode   = mapper.createArrayNode();
+        ArrayNode arraysNode = mapper.createArrayNode();
         
         // complete necessary fields ("id" and "cmd")
         rootNode.put("id", cmd instanceof CmdSid ? ((CmdSid)cmd).sid : 0);
@@ -174,14 +189,25 @@ public class Parser {
                 namesNode.add(name);
             argsNode.put("names", namesNode);
             argsNode.put("cap", ((ResponseUnits)cmd).captainId);
-        } else if (cmd instanceof ResponseAction) {
+        } else if (cmd instanceof ResponseMove) {
             rootNode.put("args", argsNode);
-            for (int i : ((ResponseAction)cmd).path)
+            for (int i : ((ResponseMove)cmd).path)
                 pathNode.add(i);
-            for (String s : ((ResponseAction)cmd).state)
+            for (String s : ((ResponseMove)cmd).state)
                 stateNode.add(s);
-            argsNode.put("act", ((ResponseAction)cmd).action);
             argsNode.put("path", pathNode);
+            argsNode.put("state", stateNode);
+        } else if (cmd instanceof ResponseStrike) {
+            rootNode.put("args", argsNode);
+            for (List<Integer> lst : ((ResponseStrike)cmd).arrays) {
+                ArrayNode n = mapper.createArrayNode();
+                for (int i : lst)
+                    n.add(i);
+                arraysNode.add(n);
+            }
+            for (String s : ((ResponseStrike)cmd).state)
+                stateNode.add(s);
+            argsNode.put("arrays", arraysNode);
             argsNode.put("state", stateNode);
         } else {
             // error occured
