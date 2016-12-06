@@ -1,4 +1,4 @@
-package ru.mitrakov.self.cdm.client.engine;
+package ru.mitrakov.self.cdm.client.engine.animation;
 
 import com.jme3.renderer.*;
 import com.jme3.math.Vector3f;
@@ -9,7 +9,7 @@ import ru.mitrakov.self.cdm.client.game.Battle;
  *
  * @author Tommy
  */
-public class BulletControl extends AbstractControl {
+public class BulletControl extends AnimatedControl {
     protected final Vector3f startPoint;
     protected final Vector3f endPoint;
     protected final Vector3f moveVector;
@@ -17,7 +17,8 @@ public class BulletControl extends AbstractControl {
     
     private boolean init = false;
 
-    public BulletControl(int startIdx, int endIdx) {
+    public BulletControl(int startIdx, int endIdx, AnimationQueue queue) {
+        super(queue);
         startPoint = new Vector3f(startIdx % Battle.WIDTH, .3f, startIdx / Battle.WIDTH);
         endPoint = new Vector3f(endIdx % Battle.WIDTH, .3f, endIdx / Battle.WIDTH);
         moveVector = endPoint.subtract(startPoint).normalize();
@@ -33,15 +34,11 @@ public class BulletControl extends AbstractControl {
         }
 
         // move it!
-        if (spatial.getLocalTranslation().distance(endPoint) < .5f) {  // if reached endPoint, stop it
-            spatial.removeFromParent();
-            spatial.removeControl(this);
-        } else {
+        if (spatial.getLocalTranslation().distance(endPoint) < .5f)    // if reached endPoint, stop it
+            stop();
+        else {
             float dt = tpf;        // scale time (in theory: dt = tpf)
             spatial.move(moveVector.mult(v0*dt));
         }
     }
-
-    @Override
-    protected void controlRender(RenderManager rm, ViewPort vp) {}
 }

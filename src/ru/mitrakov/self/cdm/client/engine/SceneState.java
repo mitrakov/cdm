@@ -1,5 +1,7 @@
 package ru.mitrakov.self.cdm.client.engine;
 
+import ru.mitrakov.self.cdm.client.engine.animation.ShellControl;
+import ru.mitrakov.self.cdm.client.engine.animation.BulletControl;
 import ru.mitrakov.self.cdm.client.game.*;
 import com.jme3.math.*;
 import com.jme3.scene.*;
@@ -11,6 +13,10 @@ import com.jme3.scene.shape.Box;
 import com.jme3.material.Material;
 import com.jme3.scene.shape.Sphere;
 import ru.mitrakov.self.cdm.client.TrixCamera;
+import ru.mitrakov.self.cdm.client.engine.animation.AnimationQueue;
+import ru.mitrakov.self.cdm.client.engine.animation.BulletBuilder;
+import ru.mitrakov.self.cdm.client.engine.animation.OutbirstBuilder;
+import ru.mitrakov.self.cdm.client.engine.animation.ShellBuilder;
 import static ru.mitrakov.self.cdm.client.game.Cell.CellType.*;
 
 /**
@@ -23,7 +29,8 @@ public class SceneState extends AbstractAppState {
     
     protected final IBattle battle;
     protected final Node node = new Node(getClass().toString());
-    protected Engine engine;
+    protected Engine engine;                 // should not be final (init in initialize)
+    protected AnimationQueue animationQueue; // should not be final (init in initialize)
     
     private transient Geometry curCell;
     private transient Spatial curUnit, activeUnit;
@@ -41,6 +48,9 @@ public class SceneState extends AbstractAppState {
         assert app != null;
         engine = (Engine)app;
         engine.getRootNode().attachChild(node);
+        
+        // create animation queue
+        animationQueue = new AnimationQueue(engine);
         
         // create battlefield
         for (Cell cell : battle.getCells())
@@ -184,11 +194,15 @@ public class SceneState extends AbstractAppState {
     }
     
     public void showBullet(int startIdx, int endIdx) {
-        node.attachChild(createBullet(startIdx, endIdx));
+        animationQueue.enqueue(new BulletBuilder(startIdx, endIdx));
     }
     
     public void showShell(int startIdx, int endIdx) {
-        node.attachChild(createShell(startIdx, endIdx));
+        animationQueue.enqueue(new ShellBuilder(startIdx, endIdx));
+    }
+    
+    public void showOutbirst(int startIdx) {
+        animationQueue.enqueue(new OutbirstBuilder(startIdx));
     }
     
     public Unit getUnit() {
@@ -300,30 +314,6 @@ public class SceneState extends AbstractAppState {
             default:
         }
 
-        return g;
-    }
-    
-    protected Spatial createBullet(int startIdx, int endIdx) {
-        Sphere s = new Sphere(16, 16, .09f);
-        Geometry g = new Geometry("bullet", s);
-        
-        Material mat = new Material(engine.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.Blue);
-        g.setMaterial(mat);
-        
-        g.addControl(new BulletControl(startIdx, endIdx));
-        return g;
-    }
-    
-    protected Spatial createShell(int startIdx, int endIdx) {
-        Sphere s = new Sphere(32, 32, .16f);
-        Geometry g = new Geometry("shell", s);
-        
-        Material mat = new Material(engine.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        mat.setColor("Color", ColorRGBA.White);
-        g.setMaterial(mat);
-        
-        g.addControl(new ShellControl(startIdx, endIdx, FastMath.PI/3));
         return g;
     }
     

@@ -1,16 +1,14 @@
-package ru.mitrakov.self.cdm.client.engine;
+package ru.mitrakov.self.cdm.client.engine.animation;
 
 import static com.jme3.math.FastMath.*;
-import com.jme3.renderer.*;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.control.AbstractControl;
 import ru.mitrakov.self.cdm.client.game.Battle;
 
 /**
  *
  * @author Tommy
  */
-public class ShellControl extends AbstractControl {
+public class ShellControl extends AnimatedControl {
     public static final float g = 9.8f;     // gravity const
     
     protected final Vector3f startPoint;    // start point
@@ -23,7 +21,8 @@ public class ShellControl extends AbstractControl {
     
     private boolean init = false;
 
-    public ShellControl(int startIdx, int endIdx, float alpha) {
+    public ShellControl(int startIdx, int endIdx, float alpha, AnimationQueue queue) {
+        super(queue);
         startPoint = new Vector3f(startIdx % Battle.WIDTH, .3f, startIdx / Battle.WIDTH);
         endPoint = new Vector3f(endIdx % Battle.WIDTH, .3f, endIdx / Battle.WIDTH);
         Vector3f dir = endPoint.subtract(startPoint);
@@ -43,17 +42,13 @@ public class ShellControl extends AbstractControl {
         }
         
         // move it!
-        if (spatial.getLocalTranslation().y < 0) {    // if reached the floor, stop it
-            spatial.removeFromParent();
-            spatial.removeControl(this);
-        } else {
+        if (spatial.getLocalTranslation().y < 0)    // if reached the floor, stop it
+            stop();
+        else {
             float dt = tpf;        // scale time (in theory: dt = tpf)
             t += dt;               // inc total time
             spatial.move(moveVector.mult(v0*dt*cos(alpha)));
             spatial.getLocalTranslation().setY(y0 + v0*t*sin(alpha) - g*t*t/2);
         }
     }
-
-    @Override
-    protected void controlRender(RenderManager rm, ViewPort vp) {}
 }
