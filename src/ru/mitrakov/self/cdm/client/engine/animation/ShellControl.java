@@ -11,19 +11,15 @@ import ru.mitrakov.self.cdm.client.game.Battle;
 public class ShellControl extends AnimatedControl {
     public static final float g = 9.8f;     // gravity const
     
-    protected final Vector3f startPoint;    // start point
     protected final Vector3f endPoint;      // end point
     protected final Vector3f moveVector;    // normalized vector of XZ-direction    
     protected final float alpha;            // angle of strike
     protected final float y0;               // start Y-position
     protected final float v0;               // start speed (strength)
     protected float t = 0;                  // total time (sec)
-    
-    private boolean init = false;
 
     public ShellControl(int startIdx, int endIdx, float alpha, AnimationQueue queue) {
-        super(queue);
-        startPoint = new Vector3f(startIdx % Battle.WIDTH, .3f, startIdx / Battle.WIDTH);
+        super(startIdx, queue);
         endPoint = new Vector3f(endIdx % Battle.WIDTH, .3f, endIdx / Battle.WIDTH);
         Vector3f dir = endPoint.subtract(startPoint);
         moveVector = dir.normalize();
@@ -34,14 +30,6 @@ public class ShellControl extends AnimatedControl {
     
     @Override
     protected void controlUpdate(float tpf) {
-        if (!init) {
-            // move spatial to the start position (don't do it in constructor,
-            // because spatial is NULL there)
-            init = true;
-            spatial.setLocalTranslation(startPoint);
-        }
-        
-        // move it!
         if (spatial.getLocalTranslation().y < 0)    // if reached the floor, stop it
             stop();
         else {
