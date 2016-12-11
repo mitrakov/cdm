@@ -1,7 +1,5 @@
 package ru.mitrakov.self.cdm.client.engine;
 
-import ru.mitrakov.self.cdm.client.engine.animation.ShellControl;
-import ru.mitrakov.self.cdm.client.engine.animation.BulletControl;
 import ru.mitrakov.self.cdm.client.game.*;
 import com.jme3.math.*;
 import com.jme3.scene.*;
@@ -9,14 +7,13 @@ import com.jme3.app.state.*;
 import com.jme3.collision.*;
 import com.jme3.renderer.Camera;
 import com.jme3.app.Application;
+import com.jme3.font.*;
 import com.jme3.scene.shape.Box;
 import com.jme3.material.Material;
-import com.jme3.scene.shape.Sphere;
+import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.scene.control.BillboardControl;
 import ru.mitrakov.self.cdm.client.TrixCamera;
-import ru.mitrakov.self.cdm.client.engine.animation.AnimationQueue;
-import ru.mitrakov.self.cdm.client.engine.animation.BulletBuilder;
-import ru.mitrakov.self.cdm.client.engine.animation.OutbirstBuilder;
-import ru.mitrakov.self.cdm.client.engine.animation.ShellBuilder;
+import ru.mitrakov.self.cdm.client.engine.animation.*;
 import static ru.mitrakov.self.cdm.client.game.Cell.CellType.*;
 
 /**
@@ -74,9 +71,14 @@ public class SceneState extends AbstractAppState {
         for (Spatial s : node.getChildren()) {
             Unit unit = s.getUserData("unit");
             if (unit != null) {
-                if (battle.getMyUnits().contains(unit) || battle.getEnemyUnits().contains(unit))
+                if (battle.getMyUnits().contains(unit) || battle.getEnemyUnits().contains(unit)) {
                     s.setLocalTranslation(unit.x, -.5f, unit.y);
-                else {
+                    for (Spatial ss : ((Node)s).getChildren()) {
+                        BitmapText bmText = ss.getUserData("hp");
+                        if (bmText != null)
+                            bmText.setText(unit.hp + "");
+                    }
+                } else {
                     s.setUserData("unit", null); // free reference to avoid leaks
                     node.detachChild(s);
                 }
@@ -250,7 +252,7 @@ public class SceneState extends AbstractAppState {
         CollisionResults results = new CollisionResults();
         node.collideWith(ray, results);
         for (CollisionResult result : results) {
-            Node p = result.getGeometry().getParent();
+            Node p = result.getGeometry().getParent().getParent();  // getParent().getParent() is safe
             if (p != null) {
                 Unit t = p.getUserData("unit");
                 if (t != null && t.mine) return p;
@@ -318,13 +320,36 @@ public class SceneState extends AbstractAppState {
     }
     
     protected Spatial createUnit(Unit unit, boolean isAggressor) {
-        Spatial g = engine.getAssetManager().loadModel("Models/tommy.j3o");
+        Node g = new Node(String.format("unit%d%s", unit.unitId, isAggressor));
+        g.attachChild(engine.getAssetManager().loadModel("Models/tommy.j3o"));
+        g.attachChild(createHpBillboard(unit, isAggressor));
         g.setUserData("unit", unit);
         g.setLocalScale(UNIT_SCALE);
         g.setLocalTranslation(unit.x, -.5f, unit.y);
         if (isAggressor)
             g.rotate(0, FastMath.PI, 0);
         return g;
+    }
+    
+    protected Spatial createHpBillboard(Unit unit, boolean isAggressor) {
+        BitmapFont font = engine.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
+        BitmapText bmText = new BitmapText(font);
+        bmText.setSize(.8f);
+        bmText.setText(String.format("%d", unit.hp));
+        bmText.setQueueBucket(RenderQueue.Bucket.Transparent);
+        bmText.setColor(ColorRGBA.White);
+        
+        BillboardControl ctrl = new BillboardControl();
+        ctrl.setAlignment(BillboardControl.Alignment.Screen);
+        
+        Node txtNode = new Node(String.format("unittxt_%d%s", unit.unitId, isAggressor));
+        txtNode.setLocalTranslation(0, 6f, 0);
+        txtNode.setCullHint(Spatial.CullHint.Never);
+        txtNode.attachChild(bmText);
+        txtNode.addControl(ctrl);
+        txtNode.setUserData("hp", bmText);
+        
+        return txtNode;
     }
     
     protected Spatial createTree(int idx) {
