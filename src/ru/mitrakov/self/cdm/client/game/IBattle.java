@@ -17,8 +17,8 @@ public interface IBattle {
     public void setCurUnit(Unit unit);
     public void updateCell(int idx, Cell cell);
     public void updateMyUnitsCount(int count);
-    public void updateMyUnit(int unitId, int x, int y, int hp, int state);
     public void updateEnemyUnitsCount(int count);
+    public void updateMyUnit(int unitId, int x, int y, int hp, int state);
     public void updateEnemyUnit(int unitId, int x, int y, int hp, int state);
     public void updateWeapons(int unitId, Collection<? extends Weapon> weapons);
     public void showAction(ActionType actionType, List<Integer> path);

@@ -76,7 +76,7 @@ public class SceneState extends AbstractAppState {
                     for (Spatial ss : ((Node)s).getChildren()) {
                         BitmapText bmText = ss.getUserData("hp");
                         if (bmText != null)
-                            bmText.setText(unit.hp + "");
+                            bmText.setText(String.format("%s\n%d", unit.name, unit.hp));
                     }
                 } else {
                     s.setUserData("unit", null); // free reference to avoid leaks
@@ -335,7 +335,7 @@ public class SceneState extends AbstractAppState {
         BitmapFont font = engine.getAssetManager().loadFont("Interface/Fonts/Default.fnt");
         BitmapText bmText = new BitmapText(font);
         bmText.setSize(.8f);
-        bmText.setText(String.format("%d", unit.hp));
+        bmText.setText(String.format("%s\n%d", unit.name, unit.hp));
         bmText.setQueueBucket(RenderQueue.Bucket.Transparent);
         bmText.setColor(ColorRGBA.White);
         

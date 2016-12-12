@@ -56,12 +56,28 @@ public final class BattleManager implements IBattleManager {
             battle.updateMyUnit(unitId, x, y, hp, state);
         else myUnits.add(new Unit(unitId, x, y, hp, state, true));
     }
+    
+    @Override
+    public void updateMyUnit(int unitId, String name) {
+        for (Unit unit : myUnits) {
+            if (unit.unitId == unitId)
+                unit.name = name;
+        }
+    }
 
     @Override
     public void updateEnemyUnit(int unitId, int x, int y, int hp, int state) {
         if (battle != null)
             battle.updateEnemyUnit(unitId, x, y, hp, state);
         else enemyUnits.add(new Unit(unitId, x, y, hp, state, false));
+    }
+    
+    @Override
+    public void updateEnemyUnit(int unitId, String name) {
+        for (Unit unit : enemyUnits) {
+            if (unit.unitId == unitId)
+                unit.name = name;
+        }
     }
 
     @Override

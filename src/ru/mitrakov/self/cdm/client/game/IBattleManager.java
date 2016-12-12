@@ -13,7 +13,9 @@ public interface IBattleManager {
     public void updateMyUnitsCount(int value);
     public void updateEnemyUnitsCount(int value);
     public void updateMyUnit(int unitId, int x, int y, int hp, int state);
+    public void updateMyUnit(int unitId, String name);
     public void updateEnemyUnit(int unitId, int x, int y, int hp, int state);
+    public void updateEnemyUnit(int unitId, String name);
     public void updateWeapons(int unitId, Collection<? extends Weapon> weapons);
     public void showAction(ActionType actionType, List<Integer> path);
     public void setCurAggressorTurn(boolean value);

@@ -1,5 +1,8 @@
 package ru.mitrakov.self.cdm.client.handlers;
 
+import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
+import java.io.UnsupportedEncodingException;
 import ru.mitrakov.self.cdm.client.json.commands.Cmd;
 import ru.mitrakov.self.cdm.client.json.commands.cmd.ResponseState;
 import ru.mitrakov.self.cdm.client.json.commands.cmd.ResponseMove;
@@ -11,9 +14,7 @@ import ru.mitrakov.self.cdm.client.game.IBattle.ActionType;
 import ru.mitrakov.self.cdm.client.game.IBattleManager;
 import ru.mitrakov.self.cdm.client.game.Weapon;
 import ru.mitrakov.self.cdm.client.gui.IGui;
-import ru.mitrakov.self.cdm.client.json.commands.cmd.Reject;
-import ru.mitrakov.self.cdm.client.json.commands.cmd.ResponseFinished;
-import ru.mitrakov.self.cdm.client.json.commands.cmd.ResponseStrike;
+import ru.mitrakov.self.cdm.client.json.commands.cmd.*;
 
 /**
  *
@@ -92,6 +93,22 @@ public final class BattleHandler extends Handler {
                     battleManager.updateEnemyUnitsCount(zipped.size());
                     for (int i=0; i < zipped.size(); i++)
                         battleManager.updateEnemyUnit(i, zipped.get(i).get(0), zipped.get(i).get(1), zipped.get(i).get(2), zipped.get(i).get(3));
+                    break;
+                }
+                case 'E': {
+                    try {
+                        String[] names = new String(Base64.decode(s.substring(1)), "UTF-8").split("\\|");
+                        for (int i=0; i < names.length; i++)
+                            battleManager.updateMyUnit(i, names[i]);
+                    } catch (Base64DecodingException | UnsupportedEncodingException ignored) {}
+                    break;
+                }
+                case 'F': {
+                    try {
+                        String[] names = new String(Base64.decode(s.substring(1)), "UTF-8").split("\\|");
+                        for (int i=0; i < names.length; i++)
+                            battleManager.updateEnemyUnit(i, names[i]);
+                    } catch (Base64DecodingException | UnsupportedEncodingException ignored) {}
                     break;
                 }
                 case 'G': {

@@ -11,6 +11,7 @@ import java.util.*;
 public class Unit implements Savable {
     public final int unitId;
     public final boolean mine;
+    public String name;
     public int x;
     public int y;
     public int hp;
@@ -35,14 +36,15 @@ public class Unit implements Savable {
 
     @Override
     public int hashCode() {
-        int hash = 5;
-        hash = 67 * hash + this.unitId;
-        hash = 67 * hash + this.x;
-        hash = 67 * hash + this.y;
-        hash = 67 * hash + this.hp;
-        hash = 67 * hash + this.state;
-        hash = 67 * hash + (this.mine ? 1 : 0);
-        hash = 67 * hash + Objects.hashCode(this.weapons);
+        int hash = 7;
+        hash = 79 * hash + this.unitId;
+        hash = 79 * hash + (this.mine ? 1 : 0);
+        hash = 79 * hash + Objects.hashCode(this.name);
+        hash = 79 * hash + this.x;
+        hash = 79 * hash + this.y;
+        hash = 79 * hash + this.hp;
+        hash = 79 * hash + this.state;
+        hash = 79 * hash + Objects.hashCode(this.weapons);
         return hash;
     }
 
@@ -58,6 +60,12 @@ public class Unit implements Savable {
         if (this.unitId != other.unitId) {
             return false;
         }
+        if (this.mine != other.mine) {
+            return false;
+        }
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
         if (this.x != other.x) {
             return false;
         }
@@ -70,9 +78,6 @@ public class Unit implements Savable {
         if (this.state != other.state) {
             return false;
         }
-        if (this.mine != other.mine) {
-            return false;
-        }
         if (!Objects.equals(this.weapons, other.weapons)) {
             return false;
         }
@@ -81,6 +86,6 @@ public class Unit implements Savable {
 
     @Override
     public String toString() {
-        return "Unit{" + "unitId=" + unitId + ", x=" + x + ", y=" + y + ", hp=" + hp + ", state=" + state + ", mine=" + mine + ", weapons=" + weapons + '}';
+        return "Unit{" + "unitId=" + unitId + ", mine=" + mine + ", name=" + name + ", x=" + x + ", y=" + y + ", hp=" + hp + ", state=" + state + ", weapons=" + weapons + '}';
     }
 }
