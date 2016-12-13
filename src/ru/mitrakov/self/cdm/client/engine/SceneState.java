@@ -10,6 +10,7 @@ import com.jme3.app.Application;
 import com.jme3.font.*;
 import com.jme3.scene.shape.Box;
 import com.jme3.material.Material;
+import com.jme3.font.Rectangle;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.control.BillboardControl;
 import ru.mitrakov.self.cdm.client.TrixCamera;
@@ -338,6 +339,8 @@ public class SceneState extends AbstractAppState {
         bmText.setText(String.format("%s\n%d", unit.name, unit.hp));
         bmText.setQueueBucket(RenderQueue.Bucket.Transparent);
         bmText.setColor(ColorRGBA.White);
+        bmText.setBox(new Rectangle(-2, 0, 4, 3));
+        bmText.setAlignment(BitmapFont.Align.Center);
         
         BillboardControl ctrl = new BillboardControl();
         ctrl.setAlignment(BillboardControl.Alignment.Screen);
