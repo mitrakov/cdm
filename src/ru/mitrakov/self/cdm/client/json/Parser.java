@@ -33,6 +33,8 @@ public class Parser {
                     return new Accept(sidNode.asInt(), rootNode.get("tok").asText(), argsNode.get("uid").asInt());
                 case "rej":
                     return new Reject(sidNode.asInt(), rootNode.get("tok").asText(), argsNode.get("uid").asInt());
+                case "iai":
+                    return new InviteAi(sidNode.asInt(), rootNode.get("tok").asText());
                 case "gup":
                     return new GiveUp(sidNode.asInt(), rootNode.get("tok").asText());
                 case "mov":
@@ -136,6 +138,8 @@ public class Parser {
         } else if (cmd instanceof Reject) {
             rootNode.put("args", argsNode);
             argsNode.put("uid", ((Reject)cmd).enemySid);
+        } else if (cmd instanceof InviteAi) {
+            // OK
         } else if (cmd instanceof GiveUp) {
             // OK
         } else if (cmd instanceof Move) {

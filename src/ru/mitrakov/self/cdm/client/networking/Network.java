@@ -42,7 +42,7 @@ public class Network implements INetwork {
                         String json = new String(datagram.getData(), 0, datagram.getLength());
                         System.out.println(json);
                         Cmd cmd = Parser.parseString(json);
-                        if (cmd instanceof CmdSid)
+                        if (cmd instanceof CmdSid && ((CmdSid)cmd).sid > 0)
                             sid = ((CmdSid)cmd).sid;
                         handler.handle(cmd);
                     } catch (IOException ex) {
